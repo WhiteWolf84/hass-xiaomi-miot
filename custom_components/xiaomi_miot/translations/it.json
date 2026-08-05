@@ -20,11 +20,13 @@
             "cloud": {
                 "description": "Configurazione account xiaomi cloud.\n{tip}",
                 "data": {
-                    "username": "Xiaomi Account ID / Email",
+                    "username": "ID account Xiaomi / Email",
                     "password": "Password",
                     "captcha": "Captcha",
+                    "verify_ticket": "Codice di verifica in due passaggi",
                     "server_country": "Posizione server MiCloud",
                     "conn_mode": "Modalità di connessione del dispostivo",
+                    "trans_options": "Traduci le descrizioni dei valori delle proprietà",
                     "filter_models": "Filtra dispositivi per modello/famiglia/WiFi (Avanzato)"
                 }
             },
@@ -37,11 +39,16 @@
                     "filter_home_id": "Filtra per casa",
                     "home_id_list": "Lista case",
                     "filter_ssid": "Filtro WiFi SSID",
-                    "ssid_list": "WiFi SSID List",
+                    "ssid_list": "Elenco SSID WiFi",
                     "filter_bssid": "Filtro WiFi BSSID",
-                    "bssid_list": "WiFi BSSID List",
+                    "bssid_list": "Elenco BSSID WiFi",
                     "filter_did": "Filtro Dispositivo",
-                    "did_list": "Lista Dispositivi"
+                    "did_list": "Lista Dispositivi",
+                    "home_ids": "Filtra per casa (lascia vuoto per salvare)"
+                },
+                "data_description": {
+                    "filter_did": "In modalità esclusione, se non selezioni alcuna opzione nell'elenco equivale a includere tutti i dispositivi.",
+                    "home_ids": "Dopo aver selezionato questa opzione e inviato tornerai a questa pagina,\ne l'elenco dei dispositivi verrà aggiornato filtrando i dispositivi delle case selezionate."
                 }
             },
             "customizing": {
@@ -53,7 +60,70 @@
                     "model": "Seleziona modello dispositivo",
                     "model_specified": "Modello dispositivo specificato (opzionale)",
                     "only_main_entity": "Solo entità principali (parent)",
+                    "yaml_mode": "Modalità YAML",
+                    "yaml_customizes": "Codice YAML delle personalizzazioni",
                     "reset_customizes": "Ripristina le opzioni predefinite",
+                    "binary_sensor_attributes": "Attributi esposti come sensori binari",
+                    "binary_sensor_properties": "Proprietà MIoT esposte come sensori binari",
+                    "bind_sensor": "Associa entità sensore (temperatura / umidità)",
+                    "bind_xiaoai": "Associa altoparlante Xiaoai (ID dispositivo)",
+                    "brightness_for_off": "Valore di luminosità considerato spento",
+                    "brightness_for_on": "Valore di luminosità considerato acceso",
+                    "button_actions": "Azioni MIoT esposte come pulsanti",
+                    "button_properties": "Proprietà MIoT esposte come pulsanti",
+                    "chunk_properties": "Numero massimo di proprietà per richiesta di polling",
+                    "close_texts": "Valori testuali che indicano chiuso",
+                    "closed_position": "Valore di posizione che indica completamente chiuso",
+                    "cloud_delay_update": "Ritardo prima di leggere lo stato dal cloud (secondi)",
+                    "configuration_entities": "Entità contrassegnate come configurazione",
+                    "coord_type": "Sistema di coordinate GPS (wgs84 / gcj02 / bd09)",
+                    "current_temp_property": "Proprietà usata come temperatura attuale",
+                    "descriptions_for_on": "Descrizioni dei valori che indicano acceso",
+                    "descriptions_for_off": "Descrizioni dei valori che indicano spento",
+                    "deviated_position": "Tolleranza di posizione per aperto / chiuso",
+                    "device_class": "Sovrascrittura della classe dispositivo",
+                    "diagnostic_entities": "Entità contrassegnate come diagnostica",
+                    "disable_location_name": "Non risolvere il nome della posizione per il device tracker",
+                    "disable_preset_modes": "Modalità preimpostate da nascondere",
+                    "entity_category": "Sovrascrittura della categoria entità",
+                    "exclude_miot_properties": "Proprietà MIoT da escludere",
+                    "exclude_miot_services": "Servizi MIoT da escludere",
+                    "exclude_type": "Tipi di entità da escludere",
+                    "feeding_measure": "Misura della porzione di cibo",
+                    "filter_home": "Integra solo i dispositivi di queste case",
+                    "interval_seconds": "Intervallo di aggiornamento dello stato (secondi)",
+                    "main_miot_services": "Servizi MIoT usati per l'entità principale",
+                    "miot_did": "Sovrascrivi ID dispositivo (did)",
+                    "mitv_lan_host": "Indirizzo IP locale della Mi TV",
+                    "motion_stream_slice": "Indice del segmento video del movimento",
+                    "motion_timeout": "Timeout di reset del rilevamento movimento (secondi)",
+                    "number_properties": "Proprietà MIoT esposte come numeri",
+                    "open_texts": "Valori testuali che indicano aperto",
+                    "percentage_property": "Proprietà usata come percentuale",
+                    "scanner_properties": "Proprietà esposte al device tracker",
+                    "screenshot_compress": "Livello di compressione degli screenshot",
+                    "select_actions": "Azioni MIoT esposte come selettori",
+                    "select_properties": "Proprietà MIoT esposte come selettori",
+                    "sensor_attributes": "Attributi esposti come sensori",
+                    "sensor_properties": "Proprietà MIoT esposte come sensori",
+                    "sources_via_apps": "Sorgenti multimediali dalle app installate",
+                    "sources_via_keycodes": "Sorgenti multimediali dai codici tasto del telecomando",
+                    "speed_property": "Proprietà usata come velocità della ventola",
+                    "stat_power_cost_key": "Chiave delle statistiche cloud per il consumo energetico",
+                    "stat_power_cost_type": "Periodo delle statistiche cloud per il consumo energetico",
+                    "state_class": "Sovrascrittura della classe di stato",
+                    "state_property": "Proprietà usata come stato principale",
+                    "switch_properties": "Proprietà MIoT esposte come interruttori",
+                    "target_position_properties": "Proprietà usate come posizione di destinazione",
+                    "television_name": "Nome del dispositivo Mi TV",
+                    "text_actions": "Azioni MIoT esposte come entità di testo",
+                    "time_properties": "Proprietà MIoT esposte come entità orario",
+                    "turn_on_hvac": "Modalità HVAC usata all'accensione",
+                    "unit_of_measurement": "Sovrascrittura dell'unità di misura",
+                    "value_ratio": "Moltiplicatore applicato al valore grezzo",
+                    "video_attribute": "Attributo video della camera (qualità dello stream)",
+                    "yeelight_smooth_off": "Transizione graduale Yeelight allo spegnimento (ms)",
+                    "yeelight_smooth_on": "Transizione graduale Yeelight all'accensione (ms)",
                     "bool2selects": "Presonalizza opzioni"
                 }
             },
@@ -62,6 +132,9 @@
                 "description": "Accedi a Xiaomi per aggiornare le credenziali memorizzate. La configurazione esistente rimane invariata.",
                 "data": {
                     "password": "Password"
+                },
+                "data_description": {
+                    "password": "Lascia vuoto per usare la password salvata."
                 }
             },
             "reauth_verify": {
@@ -115,12 +188,14 @@
             "cloud": {
                 "description": "Configurazione xiaomi cloud account.\n{tip}",
                 "data": {
-                    "username": "Xiaomi Account ID / Email",
+                    "username": "ID account Xiaomi / Email",
                     "password": "Password",
                     "captcha": "Captcha",
+                    "verify_ticket": "Codice di verifica in due passaggi",
                     "server_country": "Posizione server di MiCloud",
                     "conn_mode": "Modalità di connessione dispositivo",
                     "renew_devices": "Forza rinnovo dispositivi",
+                    "trans_options": "Traduci le descrizioni dei valori delle proprietà",
                     "disable_message": "Disattiva il sensore di notifica di Mihome",
                     "disable_scene_history": "Disabilita sensore cronologia scene Mihome"
                 }
@@ -134,11 +209,16 @@
                     "filter_home_id": "Filtra per casa",
                     "home_id_list": "Lista case",
                     "filter_ssid": "Filtro WiFi SSID",
-                    "ssid_list": "WiFi SSID List",
+                    "ssid_list": "Elenco SSID WiFi",
                     "filter_bssid": "Filtro WiFi BSSID",
-                    "bssid_list": "WiFi BSSID List",
+                    "bssid_list": "Elenco BSSID WiFi",
                     "filter_did": "Filtro Dispositivo",
-                    "did_list": "Lista Dispositivi"
+                    "did_list": "Lista Dispositivi",
+                    "home_ids": "Filtra per casa (lascia vuoto per salvare)"
+                },
+                "data_description": {
+                    "filter_did": "In modalità esclusione, se non selezioni alcuna opzione nell'elenco equivale a includere tutti i dispositivi.",
+                    "home_ids": "Dopo aver selezionato questa opzione e inviato tornerai a questa pagina,\ne l'elenco dei dispositivi verrà aggiornato filtrando i dispositivi delle case selezionate."
                 }
             }
         },
@@ -164,7 +244,42 @@
         }
     },
     "entity": {
+        "button": {
+            "info": {
+                "name": "Informazioni"
+            }
+        },
         "sensor": {
+            "clean_area": {
+                "name": "Area pulita"
+            },
+            "clean_time": {
+                "name": "Tempo di pulizia"
+            },
+            "power_cost_today": {
+                "name": "Energia oggi"
+            },
+            "power_cost_month": {
+                "name": "Energia mese"
+            },
+            "power_cost_today_2": {
+                "name": "Energia oggi"
+            },
+            "power_cost_month_2": {
+                "name": "Energia mese"
+            },
+            "props-clean_area": {
+                "name": "Area pulita"
+            },
+            "props-clean_time": {
+                "name": "Tempo di pulizia"
+            },
+            "prop_cal_day-power_cost-today": {
+                "name": "Energia oggi"
+            },
+            "prop_cal_day-power_cost-month": {
+                "name": "Energia mese"
+            },
             "lock": {
                 "state": {
                     "bluetooth": "Bluetooth",
@@ -224,6 +339,36 @@
         "select": {
             "pet_drinking_fountain-mode": {
                 "name": "Modalità acqua"
+            },
+            "fan_control-fan_level": {
+                "state": {
+                    "auto": "Automatico",
+                    "low": "Bassa",
+                    "medium": "Media",
+                    "middle": "Media",
+                    "high": "Alta",
+                    "Quiet": "Silenzioso",
+                    "Turbo": "Turbo",
+                    "Level1": "Livello 1",
+                    "Level2": "Livello 2",
+                    "Level3": "Livello 3",
+                    "Level4": "Livello 4",
+                    "Level5": "Livello 5",
+                    "Level6": "Livello 6",
+                    "Level7": "Livello 7",
+                    "Level8": "Livello 8",
+                    "Leve7": "Livello 7",
+                    "Leve8": "Livello 8"
+                }
+            },
+            "light-mode": {
+                "state": {
+                    "Day": "Giorno",
+                    "Night": "Notte",
+                    "Color": "Colore",
+                    "Scene": "Scena",
+                    "Music": "Musica"
+                }
             }
         },
         "number": {
@@ -236,7 +381,7 @@
                 "state_attributes": {
                     "fan_mode": {
                         "state": {
-                            "auto": "Auto",
+                            "auto": "Automatico",
                             "low": "Bassa",
                             "medium": "Media",
                             "middle": "Media",
@@ -249,7 +394,10 @@
                             "level4": "Livello 4",
                             "level5": "Livello 5",
                             "level6": "Livello 6",
-                            "level7": "Livello 7"
+                            "level7": "Livello 7",
+                            "level8": "Livello 8",
+                            "leve7": "Livello 7",
+                            "leve8": "Livello 8"
                         }
                     },
                     "swing_mode": {
@@ -258,6 +406,73 @@
                             "vertical": "Verticale",
                             "horizontal": "Orizontale",
                             "both": "Entrambi"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "off": "Spento",
+                            "auto": "Automatico",
+                            "Warm": "Tiepido",
+                            "Heat": "Riscaldamento",
+                            "Natural Wind": "Vento naturale"
+                        }
+                    }
+                }
+            }
+        },
+        "fan": {
+            "fan": {
+                "state_attributes": {
+                    "preset_modes": {
+                        "state": {
+                            "Straight Wind": "Vento diretto",
+                            "Natural Wind": "Vento naturale",
+                            "Circular Wind": "Vento circolare",
+                            "Basic Wind": "Vento standard",
+                            "Sleep": "Notte",
+                            "Smart": "Intelligente",
+                            "Baby": "Bambino"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "available_modes": {
+                        "state": {
+                            "Off": "Spento",
+                            "Sleep": "Notte",
+                            "Strong": "Intenso",
+                            "Constant Humidity": "Umidità costante"
+                        }
+                    }
+                }
+            },
+            "dehumidifier": {
+                "state_attributes": {
+                    "available_modes": {
+                        "state": {
+                            "Off": "Spento",
+                            "Sleep": "Notte",
+                            "Strong": "Intenso",
+                            "Constant Humidity": "Umidità costante"
+                        }
+                    }
+                }
+            }
+        },
+        "light": {
+            "light": {
+                "state_attributes": {
+                    "effect_list": {
+                        "state": {
+                            "Day": "Giorno",
+                            "Night": "Notte",
+                            "Color": "Colore",
+                            "Scene": "Scena",
+                            "Music": "Musica"
                         }
                     }
                 }
@@ -296,7 +511,7 @@
                     "description": ""
                 },
                 "update_entity": {
-                    "name": "Update entity",
+                    "name": "Aggiorna entità",
                     "description": ""
                 }
             }
@@ -372,15 +587,15 @@
                     "description": "ID entità Xiaoai"
                 },
                 "text": {
-                    "name": "Text",
+                    "name": "Testo",
                     "description": ""
                 },
                 "execute": {
-                    "name": "Execute",
+                    "name": "Esegui",
                     "description": ""
                 },
                 "silent": {
-                    "name": "Silent",
+                    "name": "Silenzioso",
                     "description": ""
                 }
             }
@@ -438,7 +653,7 @@
             "description": "Rinnova dispositivi Xiaomi in cache",
             "fields": {
                 "username": {
-                    "name": "Username",
+                    "name": "Nome utente",
                     "description": ""
                 }
             }

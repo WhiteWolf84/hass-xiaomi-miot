@@ -427,10 +427,11 @@ async def test_persist_xiaomiio_updates_entry_invalidates_and_reloads(flow_cls):
     assert flow._candidate is None
 
 
-async def test_persist_unchanged_with_listeners_skips_reload(flow_cls):
-    """When new credentials equal stored credentials and listeners exist,
-    async_update_entry must not be called and async_schedule_reload must be skipped
-    (listeners are already wired up)."""
+async def test_persist_unchanged_with_listeners_still_reloads(flow_cls):
+    """When new credentials equal stored credentials, async_update_entry must not
+    be called, but a reload must still be scheduled: update listeners only fire as
+    a result of async_update_entry, so without it nothing would drop the entry's
+    pre-reauth runtime state (HassEntry.clouds, including a cached MiCO failure)."""
     config_entries = SimpleNamespace(
         async_update_entry=MagicMock(),
         async_schedule_reload=MagicMock(),
@@ -475,7 +476,7 @@ async def test_persist_unchanged_with_listeners_skips_reload(flow_cls):
     out = await flow._persist_and_reload(candidate)
 
     config_entries.async_update_entry.assert_not_called()
-    config_entries.async_schedule_reload.assert_not_called()
+    config_entries.async_schedule_reload.assert_called_once_with("eid")
     candidate.async_stored_auth.assert_awaited_once_with(save=True)
     flow.async_abort.assert_called_once_with(reason="reauth_successful")
     assert out["reason"] == "reauth_successful"
@@ -529,6 +530,56 @@ async def test_persist_micoapi_does_not_store_micoapi_tokens_in_entry(flow_cls):
     assert "MICO_TKN" not in new_data.values()
     assert "MICO_SEC" not in new_data.values()
     candidate.async_stored_auth.assert_awaited_once_with(save=True)
+
+
+async def test_persist_micoapi_same_password_still_reloads(flow_cls):
+    """A micoapi reauth writes only the password into the entry, so retyping the
+    same one leaves the data unchanged. A reload must still be scheduled, otherwise
+    HassEntry.clouds keeps the cached `None` from the failed MiCO probe and the
+    flow reports success while the MiCO cloud stays dead."""
+    config_entries = SimpleNamespace(
+        async_update_entry=MagicMock(),
+        async_schedule_reload=MagicMock(),
+    )
+    flow = flow_cls()
+    flow.hass = SimpleNamespace(
+        config_entries=config_entries,
+        data={"xiaomi_miot": {"sessions": {}, "accounts": {}}},
+    )
+    flow.context = {"entry_id": "eid"}
+    entry = SimpleNamespace(
+        data={
+            "username": "u",
+            "password": "SAME",
+            "server_country": "cn",
+            "user_id": "u",
+            "service_token": "XIAOMIIO_TKN",
+            "ssecurity": "XIAOMIIO_SEC",
+        },
+        entry_id="eid",
+        update_listeners=[lambda hass, ent: None],
+    )
+    flow._reauth = SimpleNamespace(sid=CloudSid.MICOAPI, entry=entry)
+    flow.async_abort = MagicMock(return_value={"reason": "reauth_successful"})
+    candidate = SimpleNamespace(
+        attrs={},
+        username="u",
+        password="SAME",
+        sid="micoapi",
+        default_server="cn",
+        user_id="u",
+        service_token="MICO_TKN",
+        ssecurity="MICO_SEC",
+        client_id="MICO_DEVICE",
+        async_stored_auth=AsyncMock(return_value={}),
+    )
+    flow._candidate = candidate
+
+    out = await flow._persist_and_reload(candidate)
+
+    config_entries.async_update_entry.assert_not_called()
+    config_entries.async_schedule_reload.assert_called_once_with("eid")
+    assert out["reason"] == "reauth_successful"
 
 
 async def test_persist_store_failure_returns_save_failed(flow_cls):

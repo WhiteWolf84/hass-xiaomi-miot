@@ -753,10 +753,17 @@ class XiaomiMiotFlowHandler(config_entries.ConfigFlow, BaseFlowHandler, domain=D
             new_data['user_id'] = candidate.user_id
 
         changed = new_data != dict(entry.data)
+        listeners = getattr(entry, 'update_listeners', ())
         try:
             if changed:
                 self.hass.config_entries.async_update_entry(entry, data=new_data)
-            if not getattr(entry, 'update_listeners', ()):
+            # async_update_entry only notifies the update listeners when the entry
+            # data actually changed. When it did not (a micoapi reauth rewrites
+            # only the password, so retyping the same one leaves it untouched)
+            # nothing reloads, and the entry keeps its pre-reauth runtime state:
+            # HassEntry.clouds still holds the stale cloud, including a cached
+            # `None` from a failed MiCO probe that is only ever dropped on unload.
+            if not changed or not listeners:
                 self.hass.config_entries.async_schedule_reload(entry.entry_id)
         except Exception:
             return self._show_reauth_form(

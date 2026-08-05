@@ -348,11 +348,13 @@
                 }
             },
             "light-mode": {
-                "Day": "日光",
-                "Night": "夜光",
-                "Color": "彩光",
-                "Scene": "場景",
-                "Music": "音樂"
+                "state": {
+                    "Day": "日光",
+                    "Night": "夜光",
+                    "Color": "彩光",
+                    "Scene": "場景",
+                    "Music": "音樂"
+                }
             }
         },
         "binary_sensor": {

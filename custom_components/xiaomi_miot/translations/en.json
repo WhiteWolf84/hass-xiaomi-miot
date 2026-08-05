@@ -63,67 +63,67 @@
                     "yaml_mode": "YAML Mode",
                     "yaml_customizes": "Customizes YAML Code",
                     "reset_customizes": "Reset to default customizes",
-                    "binary_sensor_attributes": "binary_sensor_attributes",
-                    "binary_sensor_properties": "binary_sensor_properties",
-                    "bind_sensor": "bind_sensor",
-                    "bind_xiaoai": "bind_xiaoai",
-                    "brightness_for_off": "brightness_for_off",
-                    "brightness_for_on": "brightness_for_on",
-                    "button_actions": "button_actions",
-                    "button_properties": "button_properties",
-                    "chunk_properties": "chunk_properties",
-                    "close_texts": "close_texts",
-                    "closed_position": "closed_position",
-                    "cloud_delay_update": "cloud_delay_update",
-                    "configuration_entities": "configuration_entities",
-                    "coord_type": "coord_type",
-                    "current_temp_property": "current_temp_property",
-                    "descriptions_for_on": "descriptions_for_on",
-                    "descriptions_for_off": "descriptions_for_off",
-                    "deviated_position": "deviated_position",
-                    "device_class": "device_class",
-                    "diagnostic_entities": "diagnostic_entities",
-                    "disable_location_name": "disable_location_name",
-                    "disable_preset_modes": "disable_preset_modes",
-                    "entity_category": "entity_category",
-                    "exclude_miot_properties": "exclude_miot_properties",
-                    "exclude_miot_services": "exclude_miot_services",
-                    "exclude_type": "exclude_type",
-                    "feeding_measure": "feeding_measure",
-                    "filter_home": "filter_home",
-                    "interval_seconds": "interval_seconds",
-                    "main_miot_services": "main_miot_services",
-                    "miot_did": "miot_did",
-                    "mitv_lan_host": "mitv_lan_host",
-                    "motion_stream_slice": "motion_stream_slice",
-                    "motion_timeout": "motion_timeout",
-                    "number_properties": "number_properties",
-                    "open_texts": "open_texts",
-                    "percentage_property": "percentage_property",
-                    "scanner_properties": "scanner_properties",
-                    "screenshot_compress": "screenshot_compress",
-                    "select_actions": "select_actions",
-                    "select_properties": "select_properties",
-                    "sensor_attributes": "sensor_attributes",
-                    "sensor_properties": "sensor_properties",
-                    "sources_via_apps": "sources_via_apps",
-                    "sources_via_keycodes": "sources_via_keycodes",
-                    "speed_property": "speed_property",
-                    "stat_power_cost_key": "stat_power_cost_key",
-                    "stat_power_cost_type": "stat_power_cost_type",
-                    "state_class": "state_class",
-                    "state_property": "state_property",
-                    "switch_properties": "switch_properties",
-                    "target_position_properties": "target_position_properties",
-                    "television_name": "television_name",
-                    "text_actions": "text_actions",
-                    "time_properties": "time_properties",
-                    "turn_on_hvac": "turn_on_hvac",
-                    "unit_of_measurement": "unit_of_measurement",
-                    "value_ratio": "value_ratio",
-                    "video_attribute": "video_attribute",
-                    "yeelight_smooth_off": "yeelight_smooth_off",
-                    "yeelight_smooth_on": "yeelight_smooth_on",
+                    "binary_sensor_attributes": "Attributes exposed as binary sensors",
+                    "binary_sensor_properties": "MIoT properties exposed as binary sensors",
+                    "bind_sensor": "Bind sensor entities (temperature / humidity)",
+                    "bind_xiaoai": "Bind Xiaoai speaker (device ID)",
+                    "brightness_for_off": "Brightness value treated as off",
+                    "brightness_for_on": "Brightness value treated as on",
+                    "button_actions": "MIoT actions exposed as buttons",
+                    "button_properties": "MIoT properties exposed as buttons",
+                    "chunk_properties": "Max properties per polling request",
+                    "close_texts": "Text values meaning closed",
+                    "closed_position": "Position value meaning fully closed",
+                    "cloud_delay_update": "Delay before reading state from cloud (seconds)",
+                    "configuration_entities": "Entities marked as configuration",
+                    "coord_type": "GPS coordinate system (wgs84 / gcj02 / bd09)",
+                    "current_temp_property": "Property used as current temperature",
+                    "descriptions_for_on": "Value descriptions meaning on",
+                    "descriptions_for_off": "Value descriptions meaning off",
+                    "deviated_position": "Position tolerance for open / closed",
+                    "device_class": "Device class override",
+                    "diagnostic_entities": "Entities marked as diagnostic",
+                    "disable_location_name": "Do not resolve location name for device tracker",
+                    "disable_preset_modes": "Preset modes to hide",
+                    "entity_category": "Entity category override",
+                    "exclude_miot_properties": "MIoT properties to exclude",
+                    "exclude_miot_services": "MIoT services to exclude",
+                    "exclude_type": "Entity types to exclude",
+                    "feeding_measure": "Feeding portion measure",
+                    "filter_home": "Only integrate devices from these homes",
+                    "interval_seconds": "State update interval (seconds)",
+                    "main_miot_services": "MIoT services used for the main entity",
+                    "miot_did": "Override device ID (did)",
+                    "mitv_lan_host": "Mi TV local IP address",
+                    "motion_stream_slice": "Motion video segment index",
+                    "motion_timeout": "Motion detection reset timeout (seconds)",
+                    "number_properties": "MIoT properties exposed as numbers",
+                    "open_texts": "Text values meaning open",
+                    "percentage_property": "Property used as percentage",
+                    "scanner_properties": "Properties exposed to the device tracker",
+                    "screenshot_compress": "Screenshot compression level",
+                    "select_actions": "MIoT actions exposed as selects",
+                    "select_properties": "MIoT properties exposed as selects",
+                    "sensor_attributes": "Attributes exposed as sensors",
+                    "sensor_properties": "MIoT properties exposed as sensors",
+                    "sources_via_apps": "Media sources from installed apps",
+                    "sources_via_keycodes": "Media sources from remote keycodes",
+                    "speed_property": "Property used as fan speed",
+                    "stat_power_cost_key": "Cloud statistics key for power consumption",
+                    "stat_power_cost_type": "Cloud statistics period for power consumption",
+                    "state_class": "State class override",
+                    "state_property": "Property used as main state",
+                    "switch_properties": "MIoT properties exposed as switches",
+                    "target_position_properties": "Properties used as target position",
+                    "television_name": "Mi TV device name",
+                    "text_actions": "MIoT actions exposed as text entities",
+                    "time_properties": "MIoT properties exposed as time entities",
+                    "turn_on_hvac": "HVAC mode used when turning on",
+                    "unit_of_measurement": "Unit of measurement override",
+                    "value_ratio": "Multiplier applied to the raw value",
+                    "video_attribute": "Camera video attribute (stream quality)",
+                    "yeelight_smooth_off": "Yeelight smooth transition on turn off (ms)",
+                    "yeelight_smooth_on": "Yeelight smooth transition on turn on (ms)",
                     "bool2selects": "Customize options"
                 }
             },
@@ -132,6 +132,9 @@
                 "description": "Sign in to Xiaomi to refresh your stored credentials. Your existing configuration stays the same.",
                 "data": {
                     "password": "Password"
+                },
+                "data_description": {
+                    "password": "Leave blank to use the saved password."
                 }
             },
             "reauth_verify": {
@@ -271,6 +274,12 @@
             "props-clean_time": {
                 "name": "Clean Time"
             },
+            "prop_cal_day-power_cost-today": {
+                "name": "Energy Today"
+            },
+            "prop_cal_day-power_cost-month": {
+                "name": "Energy Month"
+            },
             "lock": {
                 "state": {
                     "bluetooth": "Bluetooth",
@@ -330,6 +339,36 @@
         "select": {
             "pet_drinking_fountain-mode": {
                 "name": "Water Mode"
+            },
+            "fan_control-fan_level": {
+                "state": {
+                    "auto": "Auto",
+                    "low": "Low",
+                    "medium": "Medium",
+                    "middle": "Medium",
+                    "high": "High",
+                    "Quiet": "Quiet",
+                    "Turbo": "Turbo",
+                    "Level1": "Level 1",
+                    "Level2": "Level 2",
+                    "Level3": "Level 3",
+                    "Level4": "Level 4",
+                    "Level5": "Level 5",
+                    "Level6": "Level 6",
+                    "Level7": "Level 7",
+                    "Level8": "Level 8",
+                    "Leve7": "Level 7",
+                    "Leve8": "Level 8"
+                }
+            },
+            "light-mode": {
+                "state": {
+                    "Day": "Day",
+                    "Night": "Night",
+                    "Color": "Color",
+                    "Scene": "Scene",
+                    "Music": "Music"
+                }
             }
         },
         "number": {
@@ -355,7 +394,10 @@
                             "level4": "Level 4",
                             "level5": "Level 5",
                             "level6": "Level 6",
-                            "level7": "Level 7"
+                            "level7": "Level 7",
+                            "level8": "Level 8",
+                            "leve7": "Level 7",
+                            "leve8": "Level 8"
                         }
                     },
                     "swing_mode": {
@@ -364,6 +406,73 @@
                             "vertical": "Vertical",
                             "horizontal": "Horizontal",
                             "both": "Both"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "off": "Off",
+                            "auto": "Auto",
+                            "Warm": "Warm",
+                            "Heat": "Heat",
+                            "Natural Wind": "Natural Wind"
+                        }
+                    }
+                }
+            }
+        },
+        "fan": {
+            "fan": {
+                "state_attributes": {
+                    "preset_modes": {
+                        "state": {
+                            "Straight Wind": "Straight Wind",
+                            "Natural Wind": "Natural Wind",
+                            "Circular Wind": "Circular Wind",
+                            "Basic Wind": "Basic Wind",
+                            "Sleep": "Sleep",
+                            "Smart": "Smart",
+                            "Baby": "Baby"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "available_modes": {
+                        "state": {
+                            "Off": "Off",
+                            "Sleep": "Sleep",
+                            "Strong": "Strong",
+                            "Constant Humidity": "Constant Humidity"
+                        }
+                    }
+                }
+            },
+            "dehumidifier": {
+                "state_attributes": {
+                    "available_modes": {
+                        "state": {
+                            "Off": "Off",
+                            "Sleep": "Sleep",
+                            "Strong": "Strong",
+                            "Constant Humidity": "Constant Humidity"
+                        }
+                    }
+                }
+            }
+        },
+        "light": {
+            "light": {
+                "state_attributes": {
+                    "effect_list": {
+                        "state": {
+                            "Day": "Day",
+                            "Night": "Night",
+                            "Color": "Color",
+                            "Scene": "Scene",
+                            "Music": "Music"
                         }
                     }
                 }

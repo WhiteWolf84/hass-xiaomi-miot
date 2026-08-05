@@ -450,15 +450,18 @@ class MiotCameraEntity(MiotToggleEntity, BaseCameraEntity):
         return True
 
     async def stream_source(self, **kwargs):
-        fun = self.async_get_stream_address()
-        if self._motion_enable:
-            kwargs['crypto'] = True
-            fun = self.hass.async_add_executor_job(partial(self.get_motion_stream_address, **kwargs))
-            idx = self.custom_config_integer('motion_stream_slice')
-            if idx is not None:
-                kwargs['index'] = idx
-                fun = self.hass.async_add_executor_job(partial(self.get_motion_stream_slice_video), **kwargs)
-        return await fun
+        if not self._motion_enable:
+            return await self.async_get_stream_address()
+        kwargs['crypto'] = True
+        idx = self.custom_config_integer('motion_stream_slice')
+        if idx is None:
+            return await self.hass.async_add_executor_job(
+                partial(self.get_motion_stream_address, **kwargs)
+            )
+        kwargs['index'] = idx
+        return await self.hass.async_add_executor_job(
+            partial(self.get_motion_stream_slice_video, **kwargs)
+        )
 
     async def image_source(self, **kwargs):
         if self._motion_enable:
@@ -508,7 +511,7 @@ class MiotCameraEntity(MiotToggleEntity, BaseCameraEntity):
             if self._prop_stream_address:
                 self._last_url = self._prop_stream_address.from_dict(odt)
                 self.schedule_update_ha_state()
-                self.async_check_stream_address(self._last_url)
+                await self.async_check_stream_address(self._last_url)
                 if not kwargs.get('scheduled') or self.custom_config('keep_streaming'):
                     self._schedule_stream_refresh()
             odt['expire_at'] = f'{datetime.fromtimestamp(self._url_expiration)}'
@@ -520,10 +523,17 @@ class MiotCameraEntity(MiotToggleEntity, BaseCameraEntity):
             })
         return self._last_url
 
-    def async_check_stream_address(self, url):
+    async def async_check_stream_address(self, url):
         if not url or self.custom_config_bool('disable_check_stream'):
             return False
-        res = requests.head(url)
+        return await self.hass.async_add_executor_job(self.check_stream_address, url)
+
+    def check_stream_address(self, url):
+        try:
+            res = requests.head(url, timeout=5)
+        except requests.exceptions.RequestException as exc:
+            _LOGGER.warning('%s: check stream address failed: %s', self.name, exc)
+            return False
         if res.status_code > 200:
             self.update_attrs({
                 'stream_http_status':  res.status_code,

@@ -370,10 +370,22 @@ async def async_update_options(hass: hass_core.HomeAssistant, config_entry: conf
 
 
 async def async_unload_entry(hass: hass_core.HomeAssistant, config_entry: config_entries.ConfigEntry):
-    unload_ok = await HassEntry.init(hass, config_entry).async_unload()
+    hass_entry = HassEntry.init(hass, config_entry)
+    account_ids = {
+        cloud.user_id
+        for cloud in hass_entry.clouds.values()
+        if cloud and cloud.user_id
+    }
+    unload_ok = await hass_entry.async_unload()
     if unload_ok:
         hass.data[DOMAIN].pop(config_entry.entry_id, None)
         hass.data[DOMAIN]['sub_entities'] = {}
+        # Account scoped entities (message / scene history sensors) are created
+        # once per cloud user by the sensor platform. They are removed together
+        # with the platform, so their cached references must go too, otherwise
+        # the platform skips recreating them after a reload.
+        for uid in account_ids:
+            hass.data[DOMAIN]['accounts'].pop(uid, None)
     return unload_ok
 
 
