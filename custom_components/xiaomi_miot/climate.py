@@ -533,8 +533,14 @@ class MiirClimateEntity(MiotEntity, BaseClimateEntity, RestoreEntity):
         if ATTR_HVAC_MODE in kwargs:
             try:
                 await self.async_set_hvac_mode(kwargs[ATTR_HVAC_MODE])
-            except (Exception, NotImplementedError):
-                pass
+            except NotImplementedError:
+                self.logger.debug(
+                    '%s: device does not support setting the hvac mode', self.name_model,
+                )
+            except Exception as exc:  # noqa: BLE001 - still try to set the temperature
+                self.logger.warning(
+                    '%s: set hvac mode failed: %s', self.name_model, exc, exc_info=True,
+                )
         if not self._prop_temperature:
             raise NotImplementedError()
         ret = False

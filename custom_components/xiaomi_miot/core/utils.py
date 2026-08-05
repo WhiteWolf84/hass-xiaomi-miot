@@ -158,9 +158,9 @@ def in_china(hass=None):
             return True
     try:
         return f'{locale.getdefaultlocale()[0]}'[:3] == 'zh_'
-    except (KeyError, Exception):
-        pass
-    return False
+    except (TypeError, ValueError, IndexError):
+        # no locale configured, or one that does not parse
+        return False
 
 
 def wildcard_models(model):

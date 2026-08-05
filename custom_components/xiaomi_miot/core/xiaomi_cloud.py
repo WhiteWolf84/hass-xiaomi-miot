@@ -904,11 +904,14 @@ class MiotCloud(micloud.MiCloud):
             hass_entry,
         )
         mic.user_id = str(config.get('user_id') or '')
-        if a := hass.data[DOMAIN].get('sessions', {}).get(mic.unique_id):
-            mic = copy(a)
-            if hass_entry is not None:
-                mic.hass_entry = hass_entry
-            mic.merger_config(config)
+        # The global session registry only serves ownerless clouds. An entry-bound
+        # cloud must not adopt one: `copy` is shallow, so the two would share every
+        # mutable attribute (the requests session, async_session, the state dicts)
+        # and the entry would not be isolated the way it is meant to be.
+        if hass_entry is None:
+            if a := hass.data[DOMAIN].get('sessions', {}).get(mic.unique_id):
+                mic = copy(a)
+                mic.merger_config(config)
         if not mic.service_token:
             sdt = await mic.async_stored_auth(save=False)
             config.update(sdt)

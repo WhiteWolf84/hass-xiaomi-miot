@@ -1,11 +1,12 @@
 {
   "domain": "xiaomi_miot",
   "name": "Xiaomi Miot",
+  "integration_type": "hub",
   "after_dependencies": [
     "homekit"
   ],
   "codeowners": [
-    "@al-one"
+    "@WhiteWolf84"
   ],
   "config_flow": true,
   "dependencies": [
@@ -14,13 +15,17 @@
     "persistent_notification",
     "ffmpeg"
   ],
-  "documentation": "https://github.com/al-one/hass-xiaomi-miot",
+  "documentation": "https://github.com/WhiteWolf84/hass-xiaomi-miot",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/al-one/hass-xiaomi-miot/issues",
-  "requirements": [
-    "construct>=2.10.68",
-    "python-miio>=0.5.12",
-    "micloud>=0.5"
+  "issue_tracker": "https://github.com/WhiteWolf84/hass-xiaomi-miot/issues",
+  "loggers": [
+    "micloud",
+    "miio"
   ],
-  "version": "1.1.5"
+  "requirements": [
+    "construct>=2.10.68,<3",
+    "python-miio>=0.5.12,<0.7",
+    "micloud>=0.5,<0.7"
+  ],
+  "version": "1.1.6"
 }

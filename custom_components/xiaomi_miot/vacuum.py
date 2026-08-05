@@ -278,8 +278,12 @@ class MiotRoborockVacuumEntity(MiotVacuumEntity):
                 self.logger.info('Vacuum rooms: %s', rooms)
                 return rooms
             self.logger.info('Vacuum rooms: %s', rooms)
-        except (DeviceException, Exception):
-            pass
+        except (DeviceException, OSError) as exc:
+            self.logger.warning('%s: get room mapping failed: %s', self.name_model, exc)
+        except Exception as exc:  # noqa: BLE001 - keep the entity usable on any failure
+            self.logger.warning(
+                '%s: get room mapping failed: %s', self.name_model, exc, exc_info=True,
+            )
         return None
 
     @property

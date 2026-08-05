@@ -130,3 +130,54 @@ async def test_from_token_reused_session_without_hass_entry_keeps_none(hass):
 
     assert out is not cached
     assert out.hass_entry is None
+
+async def test_entry_bound_from_token_ignores_global_session(hass):
+    """An entry-bound cloud must not adopt a globally registered session.
+
+    from_token used to copy any session matching the unique id, even when a
+    hass_entry owner was passed. `copy` is shallow, so the entry-bound cloud and
+    the global one ended up sharing every mutable attribute — the requests
+    session, async_session, the state dicts — which defeats the isolation the
+    entry-bound ownership model is supposed to give.
+    """
+    init_integration_data(hass)
+    config = {
+        "username": "u",
+        "password": "p",
+        "server_country": "cn",
+        "sid": "xiaomiio",
+        "user_id": "uid",
+    }
+    shared = MiotCloud(hass, "u", "p", "cn", "xiaomiio")
+    shared.service_token = "GLOBAL_TOKEN"
+    shared.user_id = "uid"
+    hass.data["xiaomi_miot"]["sessions"][shared.unique_id] = shared
+
+    fake_entry = SimpleNamespace()
+    with patch.object(MiotCloud, "async_stored_auth", AsyncMock(return_value={})):
+        bound = await MiotCloud.from_token(hass, dict(config), login=False, hass_entry=fake_entry)
+
+    assert bound is not shared
+    assert bound.service_token != "GLOBAL_TOKEN"
+    assert bound.hass_entry is fake_entry
+
+
+async def test_ownerless_from_token_still_reuses_global_session(hass):
+    """The global registry keeps serving ownerless clouds, as before."""
+    init_integration_data(hass)
+    config = {
+        "username": "u",
+        "password": "p",
+        "server_country": "cn",
+        "sid": "xiaomiio",
+        "user_id": "uid",
+    }
+    shared = MiotCloud(hass, "u", "p", "cn", "xiaomiio")
+    shared.service_token = "GLOBAL_TOKEN"
+    shared.user_id = "uid"
+    hass.data["xiaomi_miot"]["sessions"][shared.unique_id] = shared
+
+    with patch.object(MiotCloud, "async_stored_auth", AsyncMock(return_value={})):
+        reused = await MiotCloud.from_token(hass, dict(config), login=False)
+
+    assert reused.service_token == "GLOBAL_TOKEN"
