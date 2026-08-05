@@ -49,7 +49,6 @@ from . import (
     async_setup_config_entry,
     bind_services_to_entries,
 )
-from .core.const import HA_VERSION
 from .core.xiaomi_cloud import CloudSid
 from .core.miot_spec import (
     MiotSpec,
@@ -342,7 +341,7 @@ class MiotMediaPlayerEntity(MiotEntity, BaseMediaPlayerEntity):
         self.xiaoai_device = None
         self._supported_features |= MediaPlayerEntityFeature.PLAY_MEDIA | MediaPlayerEntityFeature.BROWSE_MEDIA
 
-        if HA_VERSION >= '2025.5' and (self._intelligent_speaker or self._message_router):
+        if self._intelligent_speaker or self._message_router:
             self._supported_features |= MediaPlayerEntityFeature.SEARCH_MEDIA
 
     @property

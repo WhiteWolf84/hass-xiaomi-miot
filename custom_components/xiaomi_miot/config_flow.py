@@ -40,7 +40,7 @@ from .core.utils import (
     in_china,
     async_analytics_track_event,
 )
-from .core.const import SUPPORTED_DOMAINS, CLOUD_SERVERS, CONF_XIAOMI_CLOUD, HA_VERSION
+from .core.const import SUPPORTED_DOMAINS, CLOUD_SERVERS, CONF_XIAOMI_CLOUD
 from .core.device import MiioInfo
 from .core.miot_spec import MiotSpec
 from .core.mini_miio import AsyncMiIO
@@ -292,7 +292,9 @@ class XiaomiMiotFlowHandler(config_entries.ConfigFlow, BaseFlowHandler, domain=D
     @staticmethod
     @callback
     def async_get_options_flow(entry: config_entries.ConfigEntry):
-        return OptionsFlowHandler(entry)
+        # The entry is resolved by Home Assistant itself; passing it in was only
+        # needed before 2024.12, when OptionsFlow had no `config_entry` property.
+        return OptionsFlowHandler()
 
     async def async_step_user(self, user_input=None):
         self.context['last_step'] = False
@@ -996,10 +998,6 @@ class XiaomiMiotFlowHandler(config_entries.ConfigFlow, BaseFlowHandler, domain=D
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow, BaseFlowHandler):
-    def __init__(self, config_entry: config_entries.ConfigEntry):
-        if HA_VERSION < '2024.12':
-            self.config_entry = config_entry
-
     @property
     def saved_config(self):
         return {

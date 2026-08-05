@@ -80,10 +80,8 @@ class FanEntity(XEntity, BaseEntity):
                 continue
             elif prop.in_list(['on']):
                 self._conv_power = conv
-                if hasattr(FanEntityFeature, 'TURN_ON'):  # v2024.8
-                    self._attr_supported_features |= FanEntityFeature.TURN_ON
-                if hasattr(FanEntityFeature, 'TURN_OFF'):
-                    self._attr_supported_features |= FanEntityFeature.TURN_OFF
+                self._attr_supported_features |= FanEntityFeature.TURN_ON
+                self._attr_supported_features |= FanEntityFeature.TURN_OFF
             elif prop.in_list(['mode']):
                 self._conv_mode = conv
                 self._attr_preset_modes = prop.list_descriptions()
@@ -232,9 +230,9 @@ class MiirFanEntity(MiirToggleEntity, FanEntity):
     def __init__(self, config: dict, miot_service: MiotService):
         super().__init__(miot_service, config=config, logger=_LOGGER)
 
-        if self._act_turn_on and hasattr(FanEntityFeature, 'TURN_ON'):  # v2024.8
+        if self._act_turn_on:
             self._supported_features |= FanEntityFeature.TURN_ON
-        if self._act_turn_off and hasattr(FanEntityFeature, 'TURN_OFF'):
+        if self._act_turn_off:
             self._supported_features |= FanEntityFeature.TURN_OFF
 
         self._attr_percentage = 50

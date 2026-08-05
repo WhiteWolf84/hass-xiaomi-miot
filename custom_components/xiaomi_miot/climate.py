@@ -202,10 +202,9 @@ class ClimateEntity(XEntity, BaseClimateEntity):
                 self._attr_swing_modes = [SWING_ON, SWING_OFF]
                 self._attr_supported_features |= ClimateEntityFeature.SWING_MODE
             elif prop.in_list(['horizontal_swing']):
-                if hasattr(ClimateEntityFeature, 'SWING_HORIZONTAL_MODE'): # v2024.12
-                    self._conv_swing_h = conv
-                    self._attr_swing_horizontal_modes = [SWING_ON, SWING_OFF]
-                    self._attr_supported_features |= ClimateEntityFeature.SWING_HORIZONTAL_MODE
+                self._conv_swing_h = conv
+                self._attr_swing_horizontal_modes = [SWING_ON, SWING_OFF]
+                self._attr_supported_features |= ClimateEntityFeature.SWING_HORIZONTAL_MODE
             elif prop.in_list(['target_temperature']):
                 self._conv_target_temp = conv
                 self._attr_min_temp = prop.range_min()
@@ -414,11 +413,9 @@ class MiirClimateEntity(MiotEntity, BaseClimateEntity, RestoreEntity):
 
         # Add turn on/off features if actions are available
         if self._act_turn_on:
-            if hasattr(ClimateEntityFeature, 'TURN_ON'):  # v2024.2+
-                self._supported_features |= ClimateEntityFeature.TURN_ON
+            self._supported_features |= ClimateEntityFeature.TURN_ON
         if self._act_turn_off:
-            if hasattr(ClimateEntityFeature, 'TURN_OFF'):  # v2024.2+
-                self._supported_features |= ClimateEntityFeature.TURN_OFF
+            self._supported_features |= ClimateEntityFeature.TURN_OFF
 
         self._attr_hvac_mode = None
         self._hvac_modes = {

@@ -32,9 +32,7 @@ class DataCoordinator(DataUpdateCoordinator):
         )
         self.device = device
         self._unsub_setup_refresh = None
-        if not hasattr(self, 'setup_method'):
-            # hass v2024.7-
-            self.async_add_listener(self.coordinator_updated)
+        self.async_add_listener(self.coordinator_updated)
 
     async def async_setup(self, index=0):
         await self._async_setup()

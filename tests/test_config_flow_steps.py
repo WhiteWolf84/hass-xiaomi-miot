@@ -137,7 +137,7 @@ def _options(hass, data, options=None):
         domain=DOMAIN, data=dict(data), options=dict(options or {}),
     )
     entry.add_to_hass(hass)
-    handler = OptionsFlowHandler(entry)
+    handler = OptionsFlowHandler()
     handler.hass = hass
     handler.context = {}
     handler.handler = entry.entry_id
@@ -195,3 +195,5 @@ def test_options_flow_is_offered_for_an_entry():
     assert isinstance(
         XiaomiMiotFlowHandler.async_get_options_flow(entry), OptionsFlowHandler,
     )
+    # the handler takes no arguments from 2024.12 on
+    assert isinstance(OptionsFlowHandler(), OptionsFlowHandler)
