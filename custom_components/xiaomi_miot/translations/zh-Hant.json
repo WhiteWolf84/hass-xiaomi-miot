@@ -274,9 +274,9 @@
                         "state": {
                             "off": "關閉",
                             "auto": "自動",
-                            "Heat": "暖氣",
-                            "Warm": "溫暖",
-                            "Natural Wind": "自然風"
+                            "heat": "暖氣",
+                            "warm": "溫暖",
+                            "natural_wind": "自然風"
                         }
                     },
                     "swing_mode": {
@@ -295,13 +295,13 @@
                 "state_attributes": {
                     "preset_modes": {
                         "state": {
-                            "Basic Wind": "標準風",
-                            "Straight Wind": "直吹風",
-                            "Natural Wind": "自然風",
-                            "Circular Wind": "循環風",
-                            "Baby": "嬰兒",
-                            "Sleep": "睡眠",
-                            "Smart": "智慧"
+                            "basic_wind": "標準風",
+                            "straight_wind": "直吹風",
+                            "natural_wind": "自然風",
+                            "circular_wind": "循環風",
+                            "baby": "嬰兒",
+                            "sleep": "睡眠",
+                            "smart": "智慧"
                         }
                     }
                 }
@@ -312,11 +312,11 @@
                 "state_attributes": {
                     "effect_list": {
                         "state": {
-                            "Day": "日光",
-                            "Night": "夜光",
-                            "Color": "彩光",
-                            "Scene": "場景",
-                            "Music": "音樂"
+                            "day": "日光",
+                            "night": "夜光",
+                            "color": "彩光",
+                            "scene": "場景",
+                            "music": "音樂"
                         }
                     }
                 }
@@ -333,27 +333,27 @@
                     "medium": "中速",
                     "middle": "中速",
                     "high": "高速",
-                    "Quiet": "靜音",
-                    "Turbo": "超強",
-                    "Level1": "速度1",
-                    "Level2": "速度2",
-                    "Level3": "速度3",
-                    "Level4": "速度4",
-                    "Level5": "速度5",
-                    "Level6": "速度6",
-                    "Level7": "速度7",
-                    "Level8": "速度8",
-                    "Leve7": "速度7",
-                    "Leve8": "速度8"
+                    "quiet": "靜音",
+                    "turbo": "超強",
+                    "level1": "速度1",
+                    "level2": "速度2",
+                    "level3": "速度3",
+                    "level4": "速度4",
+                    "level5": "速度5",
+                    "level6": "速度6",
+                    "level7": "速度7",
+                    "level8": "速度8",
+                    "leve7": "速度7",
+                    "leve8": "速度8"
                 }
             },
             "light-mode": {
                 "state": {
-                    "Day": "日光",
-                    "Night": "夜光",
-                    "Color": "彩光",
-                    "Scene": "場景",
-                    "Music": "音樂"
+                    "day": "日光",
+                    "night": "夜光",
+                    "color": "彩光",
+                    "scene": "場景",
+                    "music": "音樂"
                 }
             }
         },

@@ -347,27 +347,27 @@
                     "medium": "Media",
                     "middle": "Media",
                     "high": "Alta",
-                    "Quiet": "Silenzioso",
-                    "Turbo": "Turbo",
-                    "Level1": "Livello 1",
-                    "Level2": "Livello 2",
-                    "Level3": "Livello 3",
-                    "Level4": "Livello 4",
-                    "Level5": "Livello 5",
-                    "Level6": "Livello 6",
-                    "Level7": "Livello 7",
-                    "Level8": "Livello 8",
-                    "Leve7": "Livello 7",
-                    "Leve8": "Livello 8"
+                    "quiet": "Silenzioso",
+                    "turbo": "Turbo",
+                    "level1": "Livello 1",
+                    "level2": "Livello 2",
+                    "level3": "Livello 3",
+                    "level4": "Livello 4",
+                    "level5": "Livello 5",
+                    "level6": "Livello 6",
+                    "level7": "Livello 7",
+                    "level8": "Livello 8",
+                    "leve7": "Livello 7",
+                    "leve8": "Livello 8"
                 }
             },
             "light-mode": {
                 "state": {
-                    "Day": "Giorno",
-                    "Night": "Notte",
-                    "Color": "Colore",
-                    "Scene": "Scena",
-                    "Music": "Musica"
+                    "day": "Giorno",
+                    "night": "Notte",
+                    "color": "Colore",
+                    "scene": "Scena",
+                    "music": "Musica"
                 }
             }
         },
@@ -412,9 +412,9 @@
                         "state": {
                             "off": "Spento",
                             "auto": "Automatico",
-                            "Warm": "Tiepido",
-                            "Heat": "Riscaldamento",
-                            "Natural Wind": "Vento naturale"
+                            "warm": "Tiepido",
+                            "heat": "Riscaldamento",
+                            "natural_wind": "Vento naturale"
                         }
                     }
                 }
@@ -425,13 +425,13 @@
                 "state_attributes": {
                     "preset_modes": {
                         "state": {
-                            "Straight Wind": "Vento diretto",
-                            "Natural Wind": "Vento naturale",
-                            "Circular Wind": "Vento circolare",
-                            "Basic Wind": "Vento standard",
-                            "Sleep": "Notte",
-                            "Smart": "Intelligente",
-                            "Baby": "Bambino"
+                            "straight_wind": "Vento diretto",
+                            "natural_wind": "Vento naturale",
+                            "circular_wind": "Vento circolare",
+                            "basic_wind": "Vento standard",
+                            "sleep": "Notte",
+                            "smart": "Intelligente",
+                            "baby": "Bambino"
                         }
                     }
                 }
@@ -442,10 +442,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "Spento",
-                            "Sleep": "Notte",
-                            "Strong": "Intenso",
-                            "Constant Humidity": "Umidità costante"
+                            "off": "Spento",
+                            "sleep": "Notte",
+                            "strong": "Intenso",
+                            "constant_humidity": "Umidità costante"
                         }
                     }
                 }
@@ -454,10 +454,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "Spento",
-                            "Sleep": "Notte",
-                            "Strong": "Intenso",
-                            "Constant Humidity": "Umidità costante"
+                            "off": "Spento",
+                            "sleep": "Notte",
+                            "strong": "Intenso",
+                            "constant_humidity": "Umidità costante"
                         }
                     }
                 }
@@ -468,11 +468,11 @@
                 "state_attributes": {
                     "effect_list": {
                         "state": {
-                            "Day": "Giorno",
-                            "Night": "Notte",
-                            "Color": "Colore",
-                            "Scene": "Scena",
-                            "Music": "Musica"
+                            "day": "Giorno",
+                            "night": "Notte",
+                            "color": "Colore",
+                            "scene": "Scena",
+                            "music": "Musica"
                         }
                     }
                 }

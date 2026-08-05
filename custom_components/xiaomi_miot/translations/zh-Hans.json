@@ -287,9 +287,9 @@
                         "state": {
                             "off": "关闭",
                             "auto": "自动",
-                            "Heat": "制热",
-                            "Warm": "温暖",
-                            "Natural Wind": "自然风"
+                            "heat": "制热",
+                            "warm": "温暖",
+                            "natural_wind": "自然风"
                         }
                     },
                     "swing_mode": {
@@ -308,13 +308,13 @@
                 "state_attributes": {
                     "preset_modes": {
                         "state": {
-                            "Basic Wind": "标准风",
-                            "Straight Wind": "直吹风",
-                            "Natural Wind": "自然风",
-                            "Circular Wind": "循环风",
-                            "Baby": "婴儿",
-                            "Sleep": "睡眠",
-                            "Smart": "智能"
+                            "basic_wind": "标准风",
+                            "straight_wind": "直吹风",
+                            "natural_wind": "自然风",
+                            "circular_wind": "循环风",
+                            "baby": "婴儿",
+                            "sleep": "睡眠",
+                            "smart": "智能"
                         }
                     }
                 }
@@ -325,11 +325,11 @@
                 "state_attributes": {
                     "effect_list": {
                         "state": {
-                            "Day": "日光",
-                            "Night": "夜光",
-                            "Color": "彩光",
-                            "Scene": "场景",
-                            "Music": "音乐"
+                            "day": "日光",
+                            "night": "夜光",
+                            "color": "彩光",
+                            "scene": "场景",
+                            "music": "音乐"
                         }
                     }
                 }
@@ -346,27 +346,27 @@
                     "medium": "中档",
                     "middle": "中档",
                     "high": "高档",
-                    "Quiet": "静音",
-                    "Turbo": "超强",
-                    "Level1": "一档",
-                    "Level2": "二档",
-                    "Level3": "三档",
-                    "Level4": "四档",
-                    "Level5": "五档",
-                    "Level6": "六档",
-                    "Level7": "七档",
-                    "Level8": "八档",
-                    "Leve7": "七档",
-                    "Leve8": "八档"
+                    "quiet": "静音",
+                    "turbo": "超强",
+                    "level1": "一档",
+                    "level2": "二档",
+                    "level3": "三档",
+                    "level4": "四档",
+                    "level5": "五档",
+                    "level6": "六档",
+                    "level7": "七档",
+                    "level8": "八档",
+                    "leve7": "七档",
+                    "leve8": "八档"
                 }
             },
             "light-mode": {
                 "state": {
-                    "Day": "日光",
-                    "Night": "夜光",
-                    "Color": "彩光",
-                    "Scene": "场景",
-                    "Music": "音乐"
+                    "day": "日光",
+                    "night": "夜光",
+                    "color": "彩光",
+                    "scene": "场景",
+                    "music": "音乐"
                 }
             }
         },
@@ -396,10 +396,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "关闭",
-                            "Sleep": "睡眠",
-                            "Strong": "强力",
-                            "Constant Humidity": "恒湿"
+                            "off": "关闭",
+                            "sleep": "睡眠",
+                            "strong": "强力",
+                            "constant_humidity": "恒湿"
                         }
                     }
                 }
@@ -408,10 +408,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "关闭",
-                            "Sleep": "睡眠",
-                            "Strong": "强力",
-                            "Constant Humidity": "恒湿"
+                            "off": "关闭",
+                            "sleep": "睡眠",
+                            "strong": "强力",
+                            "constant_humidity": "恒湿"
                         }
                     }
                 }

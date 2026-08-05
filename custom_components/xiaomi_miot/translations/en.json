@@ -347,27 +347,27 @@
                     "medium": "Medium",
                     "middle": "Medium",
                     "high": "High",
-                    "Quiet": "Quiet",
-                    "Turbo": "Turbo",
-                    "Level1": "Level 1",
-                    "Level2": "Level 2",
-                    "Level3": "Level 3",
-                    "Level4": "Level 4",
-                    "Level5": "Level 5",
-                    "Level6": "Level 6",
-                    "Level7": "Level 7",
-                    "Level8": "Level 8",
-                    "Leve7": "Level 7",
-                    "Leve8": "Level 8"
+                    "quiet": "Quiet",
+                    "turbo": "Turbo",
+                    "level1": "Level 1",
+                    "level2": "Level 2",
+                    "level3": "Level 3",
+                    "level4": "Level 4",
+                    "level5": "Level 5",
+                    "level6": "Level 6",
+                    "level7": "Level 7",
+                    "level8": "Level 8",
+                    "leve7": "Level 7",
+                    "leve8": "Level 8"
                 }
             },
             "light-mode": {
                 "state": {
-                    "Day": "Day",
-                    "Night": "Night",
-                    "Color": "Color",
-                    "Scene": "Scene",
-                    "Music": "Music"
+                    "day": "Day",
+                    "night": "Night",
+                    "color": "Color",
+                    "scene": "Scene",
+                    "music": "Music"
                 }
             }
         },
@@ -412,9 +412,9 @@
                         "state": {
                             "off": "Off",
                             "auto": "Auto",
-                            "Warm": "Warm",
-                            "Heat": "Heat",
-                            "Natural Wind": "Natural Wind"
+                            "warm": "Warm",
+                            "heat": "Heat",
+                            "natural_wind": "Natural Wind"
                         }
                     }
                 }
@@ -425,13 +425,13 @@
                 "state_attributes": {
                     "preset_modes": {
                         "state": {
-                            "Straight Wind": "Straight Wind",
-                            "Natural Wind": "Natural Wind",
-                            "Circular Wind": "Circular Wind",
-                            "Basic Wind": "Basic Wind",
-                            "Sleep": "Sleep",
-                            "Smart": "Smart",
-                            "Baby": "Baby"
+                            "straight_wind": "Straight Wind",
+                            "natural_wind": "Natural Wind",
+                            "circular_wind": "Circular Wind",
+                            "basic_wind": "Basic Wind",
+                            "sleep": "Sleep",
+                            "smart": "Smart",
+                            "baby": "Baby"
                         }
                     }
                 }
@@ -442,10 +442,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "Off",
-                            "Sleep": "Sleep",
-                            "Strong": "Strong",
-                            "Constant Humidity": "Constant Humidity"
+                            "off": "Off",
+                            "sleep": "Sleep",
+                            "strong": "Strong",
+                            "constant_humidity": "Constant Humidity"
                         }
                     }
                 }
@@ -454,10 +454,10 @@
                 "state_attributes": {
                     "available_modes": {
                         "state": {
-                            "Off": "Off",
-                            "Sleep": "Sleep",
-                            "Strong": "Strong",
-                            "Constant Humidity": "Constant Humidity"
+                            "off": "Off",
+                            "sleep": "Sleep",
+                            "strong": "Strong",
+                            "constant_humidity": "Constant Humidity"
                         }
                     }
                 }
@@ -468,11 +468,11 @@
                 "state_attributes": {
                     "effect_list": {
                         "state": {
-                            "Day": "Day",
-                            "Night": "Night",
-                            "Color": "Color",
-                            "Scene": "Scene",
-                            "Music": "Music"
+                            "day": "Day",
+                            "night": "Night",
+                            "color": "Color",
+                            "scene": "Scene",
+                            "music": "Music"
                         }
                     }
                 }

@@ -1,7 +1,6 @@
 {
   "domain": "xiaomi_miot",
   "name": "Xiaomi Miot",
-  "integration_type": "hub",
   "after_dependencies": [
     "homekit"
   ],
@@ -16,6 +15,7 @@
     "ffmpeg"
   ],
   "documentation": "https://github.com/WhiteWolf84/hass-xiaomi-miot",
+  "integration_type": "hub",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/WhiteWolf84/hass-xiaomi-miot/issues",
   "loggers": [
