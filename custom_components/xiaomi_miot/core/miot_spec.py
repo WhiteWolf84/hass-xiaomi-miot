@@ -9,10 +9,6 @@ from collections.abc import Iterable
 
 from homeassistant.core import HomeAssistant
 from homeassistant.const import (
-    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_CUBIC_METER,
-    CONCENTRATION_PARTS_PER_MILLION,
     LIGHT_LUX,
     PERCENTAGE,
     UnitOfElectricCurrent,
@@ -36,6 +32,14 @@ from .const import (
 from .utils import get_translation_langs, convert_globs_to_pattern
 
 _LOGGER = logging.getLogger(__name__)
+
+# The CONCENTRATION_* constants are deprecated and disappear in HA 2027.8, but their
+# replacements (UnitOfDensity, UnitOfRatio) do not exist yet in HA 2026.1.0, the version
+# this integration still supports. The literals below are the values of both, unchanged.
+MICROGRAMS_PER_CUBIC_METER = 'μg/m³'
+MILLIGRAMS_PER_CUBIC_METER = 'mg/m³'
+PARTS_PER_CUBIC_METER = 'p/m³'
+PARTS_PER_MILLION = 'ppm'
 
 # https://iot.mi.com/new/doc/accesses/direct-access/other-platform-access/control-api#MIOT%E7%8A%B6%E6%80%81%E7%A0%81
 SPEC_ERRORS = {
@@ -950,9 +954,9 @@ class MiotProperty(MiotSpecInstance):
             'lux': LIGHT_LUX,
             'watt': UnitOfPower.WATT,
             'pascal': UnitOfPressure.PA,
-            'μg/m3': CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-            'mg/m3': CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER,
-            'p/m3': CONCENTRATION_PARTS_PER_CUBIC_METER,
+            'μg/m3': MICROGRAMS_PER_CUBIC_METER,
+            'mg/m3': MILLIGRAMS_PER_CUBIC_METER,
+            'p/m3': PARTS_PER_CUBIC_METER,
         }
         names = {
             'current_step_count': 'steps',
@@ -960,9 +964,9 @@ class MiotProperty(MiotSpecInstance):
             'power_consumption': UnitOfEnergy.WATT_HOUR,
             'electric_current': UnitOfElectricCurrent.AMPERE,
             'voltage': UnitOfElectricPotential.VOLT,
-            'pm2_5_density': CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-            'tds_in': CONCENTRATION_PARTS_PER_MILLION,
-            'tds_out': CONCENTRATION_PARTS_PER_MILLION,
+            'pm2_5_density': MICROGRAMS_PER_CUBIC_METER,
+            'tds_in': PARTS_PER_MILLION,
+            'tds_out': PARTS_PER_MILLION,
         }
         if unit in aliases:
             unit = aliases[unit]

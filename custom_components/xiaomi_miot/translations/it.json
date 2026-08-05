@@ -83,7 +83,6 @@
                     "deviated_position": "Tolleranza di posizione per aperto / chiuso",
                     "device_class": "Sovrascrittura della classe dispositivo",
                     "diagnostic_entities": "Entità contrassegnate come diagnostica",
-                    "disable_location_name": "Non risolvere il nome della posizione per il device tracker",
                     "disable_preset_modes": "Modalità preimpostate da nascondere",
                     "entity_category": "Sovrascrittura della categoria entità",
                     "exclude_miot_properties": "Proprietà MIoT da escludere",

@@ -83,7 +83,6 @@
                     "deviated_position": "Position tolerance for open / closed",
                     "device_class": "Device class override",
                     "diagnostic_entities": "Entities marked as diagnostic",
-                    "disable_location_name": "Do not resolve location name for device tracker",
                     "disable_preset_modes": "Preset modes to hide",
                     "entity_category": "Entity category override",
                     "exclude_miot_properties": "MIoT properties to exclude",
