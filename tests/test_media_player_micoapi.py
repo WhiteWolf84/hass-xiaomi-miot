@@ -53,7 +53,6 @@ async def test_lazy_micoapi_probe_uses_owner(hass):
     init_integration_data(hass)
     fake_cloud = SimpleNamespace(sid="micoapi", async_check_micoapi_auth=AsyncMock(return_value=True))
     he = _make_owner(fake_cloud)
-    HassEntry.ALL["eid"] = he
     hass.data[DOMAIN]["eid"] = he
     ent = _FakeEntity(hass)
     await ent.async_added_to_hass()

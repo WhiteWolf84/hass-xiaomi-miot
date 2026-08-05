@@ -236,8 +236,9 @@ async def _setup_attempt_cleanup(hass, entry_id, hass_entry):
     if alias is not None and hass_entry.clouds.get(CloudSid.XIAOMIIO) is alias:
         hass.data[DOMAIN].pop(entry_id, None)
     hass_entry.clouds.clear()
-    if HassEntry.ALL.get(entry_id) is hass_entry:
-        HassEntry.ALL.pop(entry_id, None)
+    entry_obj = getattr(hass_entry, 'entry', None)
+    if entry_obj is not None and getattr(entry_obj, 'runtime_data', None) is hass_entry:
+        entry_obj.runtime_data = None
 
 
 async def async_setup_entry(hass: hass_core.HomeAssistant, config_entry: config_entries.ConfigEntry):
@@ -613,7 +614,7 @@ async def _handle_device_registry_event(hass: hass_core.HomeAssistant):
             return
         miot_device = None
         for entry_id in device.config_entries:
-            entry = HassEntry.ALL.get(entry_id)
+            entry = HassEntry.from_entry_id(hass, entry_id)
             if not entry:
                 continue
             for d in entry.devices.values():

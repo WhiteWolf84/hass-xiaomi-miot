@@ -17,7 +17,6 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class HassEntry:
-    ALL: dict[str, 'HassEntry'] = {}
     cloud_devices = None
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
@@ -33,11 +32,18 @@ class HassEntry:
 
     @staticmethod
     def init(hass: HomeAssistant, entry: ConfigEntry):
-        this = HassEntry.ALL.get(entry.entry_id)
-        if not this:
+        this = getattr(entry, 'runtime_data', None)
+        if not isinstance(this, HassEntry):
             this = HassEntry(hass, entry)
-            HassEntry.ALL[entry.entry_id] = this
+            entry.runtime_data = this
         return this
+
+    @staticmethod
+    def from_entry_id(hass: HomeAssistant, entry_id: str) -> Optional['HassEntry']:
+        """Look up the runtime object when only the entry id is known."""
+        entry = hass.config_entries.async_get_entry(entry_id)
+        this = getattr(entry, 'runtime_data', None) if entry else None
+        return this if isinstance(this, HassEntry) else None
 
     async def async_unload(self):
         ret = all(
@@ -52,7 +58,8 @@ class HassEntry:
             for device in self.devices.values():
                 await device.async_unload()
             self.clouds.clear()
-            HassEntry.ALL.pop(self.entry.entry_id, None)
+            if getattr(self.entry, 'runtime_data', None) is self:
+                self.entry.runtime_data = None
         return ret
 
     def __getattr__(self, item):

@@ -23,9 +23,9 @@ def entry(hass):
         state=ConfigEntryState.LOADED,
     )
     he = HassEntry(hass, e)
-    HassEntry.ALL["eid"] = he
+    e.runtime_data = he
     yield he
-    HassEntry.ALL.pop("eid", None)
+    e.runtime_data = None
 
 
 async def test_first_get_cloud_creates_xiaomiio(entry, hass):

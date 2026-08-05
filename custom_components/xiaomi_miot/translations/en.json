@@ -486,15 +486,15 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "method": {
                     "name": "Method",
-                    "description": ""
+                    "description": "Method of the command."
                 },
                 "params": {
                     "name": "Params",
-                    "description": ""
+                    "description": "Params for the method."
                 }
             }
         },
@@ -504,15 +504,15 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "mapping": {
                     "name": "Mapping",
-                    "description": ""
+                    "description": "Mapping for properties."
                 },
                 "update_entity": {
                     "name": "Update entity",
-                    "description": ""
+                    "description": "Update to entity state attributes."
                 }
             }
         },
@@ -522,15 +522,15 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "field": {
                     "name": "Field",
-                    "description": ""
+                    "description": "Field of property."
                 },
                 "value": {
                     "name": "Value",
-                    "description": ""
+                    "description": "Value of property."
                 }
             }
         },
@@ -540,19 +540,19 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "siid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SIID",
+                    "description": "Miot service ID."
                 },
                 "piid": {
-                    "name": "",
-                    "description": ""
+                    "name": "PIID",
+                    "description": "Miot property ID."
                 },
                 "value": {
-                    "name": "",
-                    "description": ""
+                    "name": "Value",
+                    "description": "Miot property value."
                 }
             }
         },
@@ -562,19 +562,19 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "siid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SIID",
+                    "description": "Miot service ID."
                 },
                 "aiid": {
-                    "name": "",
-                    "description": ""
+                    "name": "AIID",
+                    "description": "Miot action ID."
                 },
                 "params": {
-                    "name": "",
-                    "description": ""
+                    "name": "Params",
+                    "description": "Miot action params."
                 }
             }
         },
@@ -588,15 +588,15 @@
                 },
                 "text": {
                     "name": "Text",
-                    "description": ""
+                    "description": "Text content."
                 },
                 "execute": {
                     "name": "Execute",
-                    "description": ""
+                    "description": "Execute text directive."
                 },
                 "silent": {
                     "name": "Silent",
-                    "description": ""
+                    "description": "Silent execution."
                 }
             }
         },
@@ -610,7 +610,7 @@
                 },
                 "text": {
                     "name": "Text",
-                    "description": ""
+                    "description": "Text content for wake up."
                 }
             }
         },
@@ -620,31 +620,31 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "type": {
                     "name": "Type",
-                    "description": ""
+                    "description": "Data type."
                 },
                 "key": {
                     "name": "Key",
-                    "description": ""
+                    "description": "Data key."
                 },
                 "time_start": {
                     "name": "Time start",
-                    "description": ""
+                    "description": "From the unix timestamp."
                 },
                 "time_end": {
                     "name": "Time end",
-                    "description": ""
+                    "description": "To the unix timestamp."
                 },
                 "limit": {
                     "name": "Limit",
-                    "description": ""
+                    "description": "Limit of results."
                 },
                 "group": {
                     "name": "Group",
-                    "description": ""
+                    "description": "Results grouping."
                 }
             }
         },
@@ -654,7 +654,7 @@
             "fields": {
                 "username": {
                     "name": "Username",
-                    "description": ""
+                    "description": "Xiaomi Account ID / Email / Phone."
                 }
             }
         },
@@ -664,7 +664,7 @@
             "fields": {
                 "name": {
                     "name": "Name",
-                    "description": ""
+                    "description": "Keyword of device name in Mihome / IP / Model."
                 }
             }
         },
@@ -674,11 +674,11 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "did": {
                     "name": "DID",
-                    "description": ""
+                    "description": "Xiaomi device ID."
                 }
             }
         },
@@ -688,27 +688,27 @@
             "fields": {
                 "entity_id": {
                     "name": "Entity ID",
-                    "description": ""
+                    "description": "ID of the entity."
                 },
                 "api": {
                     "name": "API",
-                    "description": ""
+                    "description": "Xiaomi API path."
                 },
                 "data": {
                     "name": "Data",
-                    "description": ""
+                    "description": "Xiaomi API request data."
                 },
                 "method": {
                     "name": "Method",
-                    "description": ""
+                    "description": "Request method."
                 },
                 "crypt": {
                     "name": "Crypt",
-                    "description": ""
+                    "description": "Crypt data."
                 },
                 "sid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SID",
+                    "description": "Xiaomi service ID."
                 }
             }
         }

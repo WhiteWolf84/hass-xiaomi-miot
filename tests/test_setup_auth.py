@@ -159,12 +159,14 @@ async def test_cleanup_only_runs_when_alias_matches(hass):
     init_integration_data(hass)
     fake_cloud_a = SimpleNamespace(sid="xiaomiio", unique_id="a", user_id="a")
     fake_cloud_b = SimpleNamespace(sid="xiaomiio", unique_id="b", user_id="b")
+    config_entry = SimpleNamespace(entry_id="eid", runtime_data=None)
     hass_entry = SimpleNamespace(
         id="eid",
         clouds={CloudSid.XIAOMIIO: fake_cloud_b},
+        entry=config_entry,
     )
+    config_entry.runtime_data = hass_entry
     hass.data[DOMAIN]["eid"] = {CONF_XIAOMI_CLOUD: fake_cloud_a}
-    HassEntry.ALL["eid"] = hass_entry
 
     from custom_components.xiaomi_miot import _setup_attempt_cleanup
     await _setup_attempt_cleanup(hass, "eid", hass_entry)
@@ -172,5 +174,5 @@ async def test_cleanup_only_runs_when_alias_matches(hass):
     assert CONF_XIAOMI_CLOUD in hass.data[DOMAIN]["eid"]
     # clouds was cleared anyway
     assert hass_entry.clouds == {}
-    # HassEntry.ALL entry removed since the instance still matches
-    assert "eid" not in HassEntry.ALL
+    # runtime_data released since the instance still matches
+    assert config_entry.runtime_data is None

@@ -14,25 +14,25 @@
                     "host": "IP Locale",
                     "token": "Token",
                     "name": "Nome Dispositivo",
-                    "scan_interval": "Intervallo (secondi)"
+                    "scan_interval": "Intervallo di aggiornamento stato (secondi)"
                 }
             },
             "cloud": {
-                "description": "Configurazione account xiaomi cloud.\n{tip}",
+                "description": "Configurazione account Xiaomi Cloud.\n{tip}",
                 "data": {
                     "username": "ID account Xiaomi / Email",
                     "password": "Password",
                     "captcha": "Captcha",
                     "verify_ticket": "Codice di verifica in due passaggi",
                     "server_country": "Posizione server MiCloud",
-                    "conn_mode": "Modalità di connessione del dispostivo",
+                    "conn_mode": "Modalità di connessione del dispositivo",
                     "trans_options": "Traduci le descrizioni dei valori delle proprietà",
-                    "filter_models": "Filtra dispositivi per modello/famiglia/WiFi (Avanzato)"
+                    "filter_models": "Filtra dispositivi per modello / casa / WiFi (avanzato)"
                 }
             },
             "cloud_filter": {
                 "title": "Filtro dispositivi cloud",
-                "description": "Puoi includere o escludere dispositivi per integrare solo i dipositivi preferiti. In modalità esclusione, se non si seleziona nessuna opzione, vengono considerate tutte le opzioni come incluse.\n{tip}",
+                "description": "Puoi includere o escludere dispositivi per integrare solo quelli che ti interessano.\n{tip}",
                 "data": {
                     "filter_model": "Filtro Modello Dispositivo",
                     "model_list": "Lista Modelli Dispositivi",
@@ -52,7 +52,7 @@
                 }
             },
             "customizing": {
-                "title": "Presonalizzazione entità / dispositivi",
+                "title": "Personalizzazione entità / dispositivi",
                 "description": "{tip}",
                 "data": {
                     "domain": "Seleziona dominio entità",
@@ -124,7 +124,7 @@
                     "video_attribute": "Attributo video della camera (qualità dello stream)",
                     "yeelight_smooth_off": "Transizione graduale Yeelight allo spegnimento (ms)",
                     "yeelight_smooth_on": "Transizione graduale Yeelight all'accensione (ms)",
-                    "bool2selects": "Presonalizza opzioni"
+                    "bool2selects": "Personalizza opzioni"
                 }
             },
             "reauth_password": {
@@ -154,10 +154,10 @@
         },
         "error": {
             "cannot_connect": "Xiaomi non è raggiungibile.",
-            "cannot_login": "Login all'account xiaomi cloud fallito, per favore controlla che la password sia corretta. Seil login continua a fallrie, effettua il login a mi.com inello stesso ambiente del corrente network e riprova.",
-            "cannot_reach": " Impossibile accedere all'API Xiaomi",
-            "tzinfo_error": "Guardare: https://github.com/al-one/hass-xiaomi-miot/issues/260",
-            "none_devices": "Nessun dispositivo nell'account xiaomi cloud",
+            "cannot_login": "Login all'account Xiaomi Cloud fallito. Controlla che le credenziali siano corrette. Se il login continua a fallire, accedi a mi.com dalla stessa rete e riprova.",
+            "cannot_reach": "Impossibile accedere all'API Xiaomi.",
+            "tzinfo_error": "Sembra esserci un problema con l'ambiente Home Assistant. Controlla la configurazione del fuso orario.",
+            "none_devices": "Nessun dispositivo trovato in questo account Xiaomi.",
             "need_verify": "È richiesto un codice di verifica.",
             "invalid_auth": "Xiaomi ha rifiutato le credenziali.\n{tip}",
             "need_captcha": "È richiesto il captcha.",
@@ -165,9 +165,9 @@
             "unknown": "Errore imprevisto."
         },
         "abort": {
-            "config_saved": "Configurazione salvata! [Personalizza di nuovo](/_my_redirect/config_flow_start?domain=xiaomi_miot).\n{tip}\n\nAlcune opzioni di personalizzazione richiedono [reload integration](/developer-tools/yaml) per avere effetto.",
-            "already_configured": "Il dispositivo è già configurato",
-            "not_xiaomi_miio": "Non è un dispositivo Xiaomi miio/miot.",
+            "config_saved": "Configurazione salvata! [Personalizza di nuovo](/_my_redirect/config_flow_start?domain=xiaomi_miot).\n{tip}\n\nAlcune opzioni di personalizzazione richiedono di [ricaricare l'integrazione](/developer-tools/yaml) per avere effetto.",
+            "already_configured": "Questo dispositivo è già configurato.",
+            "not_xiaomi_miio": "Questo dispositivo non supporta il protocollo miio/miot.",
             "unsupported_sid": "La riautenticazione non è supportata per questo account.",
             "wrong_account": "L'autenticazione non corrisponde all'account Xiaomi configurato.",
             "reauth_successful": "Account Xiaomi aggiornato."
@@ -186,23 +186,23 @@
                 }
             },
             "cloud": {
-                "description": "Configurazione xiaomi cloud account.\n{tip}",
+                "description": "Configurazione account Xiaomi Cloud.\n{tip}",
                 "data": {
                     "username": "ID account Xiaomi / Email",
                     "password": "Password",
                     "captcha": "Captcha",
                     "verify_ticket": "Codice di verifica in due passaggi",
                     "server_country": "Posizione server di MiCloud",
-                    "conn_mode": "Modalità di connessione dispositivo",
+                    "conn_mode": "Modalità di connessione del dispositivo",
                     "renew_devices": "Forza rinnovo dispositivi",
                     "trans_options": "Traduci le descrizioni dei valori delle proprietà",
-                    "disable_message": "Disattiva il sensore di notifica di Mihome",
-                    "disable_scene_history": "Disabilita sensore cronologia scene Mihome"
+                    "disable_message": "Disattiva il sensore notifiche di Mi Home",
+                    "disable_scene_history": "Disattiva il sensore cronologia scene di Mi Home"
                 }
             },
             "cloud_filter": {
                 "title": "Filtro dispositivi cloud",
-                "description": "Puoi includere o escludere dispositivi per integrare solo i dipositivi preferiti. In modalità esclusione, se non si seleziona nessuna opzione, vengono considerate tutte le opzioni come incluse.\n{tip}",
+                "description": "Puoi includere o escludere dispositivi per integrare solo quelli che ti interessano.\n{tip}",
                 "data": {
                     "filter_model": "Filtro Modello Dispositivo",
                     "model_list": "Lista Modelli Dispositivi",
@@ -224,10 +224,10 @@
         },
         "error": {
             "cannot_connect": "Connessione al dispositivo fallita",
-            "cannot_login": "Login all'account xiaomi cloud fallito, per favore controlla che la password sia corretta. Seil login continua a fallrie, effettua il login a mi.com inello stesso ambiente del corrente network e riprova.",
-            "cannot_reach": " Impossibile accedere all'API Xiaomi",
-            "tzinfo_error": "Guardare: https://github.com/al-one/hass-xiaomi-miot/issues/260",
-            "none_devices": "Nessun dispositivo nell'account xiaomi cloud",
+            "cannot_login": "Login all'account Xiaomi Cloud fallito. Controlla che le credenziali siano corrette. Se il login continua a fallire, accedi a mi.com dalla stessa rete e riprova.",
+            "cannot_reach": "Impossibile accedere all'API Xiaomi.",
+            "tzinfo_error": "Sembra esserci un problema con l'ambiente Home Assistant. Controlla la configurazione del fuso orario.",
+            "none_devices": "Nessun dispositivo trovato in questo account Xiaomi.",
             "need_verify": "Questo accesso richiede una verifica di sicurezza. Apri il link di verifica qui sotto per inviare il codice tramite telefono/e-mail. Dopo aver ricevuto il codice, non verificarlo nella pagina web. Torna in Home Assistant e inseriscilo nel campo sottostante."
         },
         "abort": {
@@ -486,15 +486,15 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "method": {
                     "name": "Metodo",
-                    "description": ""
+                    "description": "Metodo del comando miio da inviare."
                 },
                 "params": {
                     "name": "Parametro",
-                    "description": ""
+                    "description": "Parametri del metodo."
                 }
             }
         },
@@ -504,15 +504,15 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "mapping": {
                     "name": "Mappatura",
-                    "description": ""
+                    "description": "Mappatura delle proprietà da leggere (siid / piid)."
                 },
                 "update_entity": {
                     "name": "Aggiorna entità",
-                    "description": ""
+                    "description": "Scrive il risultato negli attributi di stato dell'entità."
                 }
             }
         },
@@ -522,15 +522,15 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "field": {
                     "name": "Campo",
-                    "description": ""
+                    "description": "Nome del campo della proprietà."
                 },
                 "value": {
                     "name": "Valore",
-                    "description": ""
+                    "description": "Valore da impostare."
                 }
             }
         },
@@ -540,19 +540,19 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "siid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SIID",
+                    "description": "ID del servizio MIoT."
                 },
                 "piid": {
-                    "name": "",
-                    "description": ""
+                    "name": "PIID",
+                    "description": "ID della proprietà MIoT."
                 },
                 "value": {
-                    "name": "",
-                    "description": ""
+                    "name": "Valore",
+                    "description": "Valore della proprietà MIoT."
                 }
             }
         },
@@ -562,19 +562,19 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "siid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SIID",
+                    "description": "ID del servizio MIoT."
                 },
                 "aiid": {
-                    "name": "",
-                    "description": ""
+                    "name": "AIID",
+                    "description": "ID dell'azione MIoT."
                 },
                 "params": {
-                    "name": "",
-                    "description": ""
+                    "name": "Parametri",
+                    "description": "Parametri dell'azione MIoT."
                 }
             }
         },
@@ -588,15 +588,15 @@
                 },
                 "text": {
                     "name": "Testo",
-                    "description": ""
+                    "description": "Testo da inviare all'altoparlante."
                 },
                 "execute": {
                     "name": "Esegui",
-                    "description": ""
+                    "description": "Esegue il testo come comando vocale invece di farlo pronunciare."
                 },
                 "silent": {
                     "name": "Silenzioso",
-                    "description": ""
+                    "description": "Esecuzione silenziosa, senza risposta vocale."
                 }
             }
         },
@@ -610,7 +610,7 @@
                 },
                 "text": {
                     "name": "Testo",
-                    "description": ""
+                    "description": "Testo da pronunciare al risveglio."
                 }
             }
         },
@@ -620,31 +620,31 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "type": {
                     "name": "Tipo",
-                    "description": ""
+                    "description": "Tipo di dati da recuperare."
                 },
                 "key": {
                     "name": "Chiave",
-                    "description": ""
+                    "description": "Chiave dei dati da recuperare."
                 },
                 "time_start": {
                     "name": "Tempo di avvio",
-                    "description": ""
+                    "description": "Timestamp Unix di inizio."
                 },
                 "time_end": {
                     "name": "Tempo di fine",
-                    "description": ""
+                    "description": "Timestamp Unix di fine."
                 },
                 "limit": {
                     "name": "Limite",
-                    "description": ""
+                    "description": "Numero massimo di risultati."
                 },
                 "group": {
                     "name": "Groupo",
-                    "description": ""
+                    "description": "Raggruppamento dei risultati."
                 }
             }
         },
@@ -654,7 +654,7 @@
             "fields": {
                 "username": {
                     "name": "Nome utente",
-                    "description": ""
+                    "description": "ID account Xiaomi, email o numero di telefono."
                 }
             }
         },
@@ -664,7 +664,7 @@
             "fields": {
                 "name": {
                     "name": "Nome",
-                    "description": ""
+                    "description": "Parola chiave del nome dispositivo in Mi Home, indirizzo IP o modello."
                 }
             }
         },
@@ -674,11 +674,11 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "did": {
                     "name": "DID",
-                    "description": ""
+                    "description": "ID del dispositivo Xiaomi (did)."
                 }
             }
         },
@@ -688,27 +688,27 @@
             "fields": {
                 "entity_id": {
                     "name": "ID entità",
-                    "description": ""
+                    "description": "ID dell'entità."
                 },
                 "api": {
                     "name": "API",
-                    "description": ""
+                    "description": "Percorso dell'API Xiaomi."
                 },
                 "data": {
                     "name": "Dati",
-                    "description": ""
+                    "description": "Dati della richiesta all'API Xiaomi."
                 },
                 "method": {
                     "name": "Metodo",
-                    "description": ""
+                    "description": "Metodo della richiesta (GET o POST)."
                 },
                 "crypt": {
                     "name": "Cifratura",
-                    "description": ""
+                    "description": "Cifra i dati della richiesta."
                 },
                 "sid": {
-                    "name": "",
-                    "description": ""
+                    "name": "SID",
+                    "description": "ID del servizio Xiaomi (SID)."
                 }
             }
         }
