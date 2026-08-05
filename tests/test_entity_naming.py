@@ -9,8 +9,6 @@ model + MAC + service desc_name (`MiotSpec.generate_entity_id_by_mac`) and the
 sub entities from the parent's `entity_id_prefix` plus the attribute name. The
 display name is not an input to either.
 """
-from types import SimpleNamespace
-
 import pytest
 
 from custom_components.xiaomi_miot import BaseEntity
