@@ -1,12 +1,12 @@
 #!/bin/bash
-# wget -q -O - https://raw.githubusercontent.com/al-one/hass-xiaomi-miot/master/install.sh | bash -
-# wget -q -O - https://raw.githubusercontent.com/al-one/hass-xiaomi-miot/master/install.sh | ARCHIVE_TAG=v1.0.0 bash -
-# wget -q -O - https://raw.githubusercontent.com/al-one/hass-xiaomi-miot/master/install.sh | HUB_DOMAIN=hub.fastgit.xyz bash -
-# wget -q -O - https://raw.githubusercontent.com/al-one/hass-xiaomi-miot/master/install.sh | DOMAIN=hacs REPO_PATH=hacs-china/integration ARCHIVE_TAG=main bash -
+# wget -q -O - https://raw.githubusercontent.com/WhiteWolf84/hass-xiaomi-miot/master/install.sh | bash -
+# wget -q -O - https://raw.githubusercontent.com/WhiteWolf84/hass-xiaomi-miot/master/install.sh | ARCHIVE_TAG=v1.0.0 bash -
+# wget -q -O - https://raw.githubusercontent.com/WhiteWolf84/hass-xiaomi-miot/master/install.sh | HUB_DOMAIN=hub.fastgit.xyz bash -
+# wget -q -O - https://raw.githubusercontent.com/WhiteWolf84/hass-xiaomi-miot/master/install.sh | DOMAIN=hacs REPO_PATH=hacs-china/integration ARCHIVE_TAG=main bash -
 set -e
 
 [ -z "$DOMAIN" ] && DOMAIN="xiaomi_miot"
-[ -z "$REPO_PATH" ] && REPO_PATH="al-one/hass-xiaomi-miot"
+[ -z "$REPO_PATH" ] && REPO_PATH="WhiteWolf84/hass-xiaomi-miot"
 REPO_NAME=$(basename "$REPO_PATH")
 
 [ -z "$ARCHIVE_TAG" ] && ARCHIVE_TAG="$1"

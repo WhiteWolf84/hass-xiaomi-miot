@@ -461,13 +461,29 @@ def bind_services_to_entries(hass, services):
         hass.services.async_register(DOMAIN, srv, async_service_handler, **kws)
 
 
+def select_translation_dictionary(lang):
+    """Pick the built-in dictionary for a Home Assistant language tag.
+
+    HA reports tags like `it`, `zh-Hans` or `pt-BR`, while the dictionaries are
+    keyed by the bare language, so the region is dropped on the second attempt.
+    Returns None when nothing matches, which leaves the spec names in English.
+    """
+    for key in (f'{lang}', f'{lang}'.replace('_', '-').split('-')[0].lower()):
+        dic = TRANSLATION_LANGUAGES.get(key)
+        if isinstance(dic, dict):
+            return dic
+    return None
+
+
 async def async_reload_integration_config(hass, config):
     hass.data[DOMAIN]['config'] = config
 
-    if lang := config.get('language'):
-        dic = TRANSLATION_LANGUAGES.get(lang)
-        if isinstance(dic, dict):
-            TRANSLATION_LANGUAGES.update(dic)
+    # Home Assistant already knows the user's language, so the built-in dictionary
+    # is selected from it by default. `language:` stays available to pick a
+    # different one, and still wins when it is set.
+    lang = config.get('language') or hass.config.language
+    if lang and (dic := select_translation_dictionary(lang)):
+        TRANSLATION_LANGUAGES.update(dic)
     dic = config.get('translations') or {}
     if dic and isinstance(dic, dict):
         TRANSLATION_LANGUAGES.update(dic)
@@ -673,6 +689,24 @@ class BaseEntity(BasicEntity):
     _attr_device_class = None
     _attr_entity_category = None
     _attr_translation_key = None
+    _attr_has_entity_name = True
+
+    def entity_name_without_device(self, name):
+        """Return the entity's own name, without the device name it prepends.
+
+        These entities build `_name` as "<device name> <service description>".
+        With has_entity_name Home Assistant composes that pairing itself, so an
+        entity exposing the full string would render the device name twice.
+
+        Returning None is deliberate: it tells Home Assistant the entity has no
+        name of its own and should be shown under the device name alone, which
+        is the correct result for a main entity.
+        """
+        nam = f'{name or ""}'.strip()
+        dev = f'{getattr(self, "device_name", "") or ""}'.strip()
+        if dev and nam.lower().startswith(dev.lower()):
+            nam = nam[len(dev):].strip()
+        return nam or None
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -821,7 +855,7 @@ class MiioEntity(BaseEntity):
 
     @property
     def name(self):
-        return self._name
+        return self.entity_name_without_device(self._name)
 
     @property
     def name_model(self):
@@ -1224,7 +1258,7 @@ class BaseSubEntity(BaseEntity):
 
     @property
     def name(self):
-        return self._name
+        return self.entity_name_without_device(self._name)
 
     @property
     def device_name(self):

@@ -1,12 +1,12 @@
-[![version](https://img.shields.io/github/manifest-json/v/al-one/hass-xiaomi-miot?filename=custom_components%2Fxiaomi_miot%2Fmanifest.json)](https://github.com/al-one/hass-xiaomi-miot/releases/latest)
-[![releases](https://img.shields.io/github/downloads/al-one/hass-xiaomi-miot/total)](https://github.com/al-one/hass-xiaomi-miot/releases)
-[![stars](https://img.shields.io/github/stars/al-one/hass-xiaomi-miot)](https://github.com/al-one/hass-xiaomi-miot/stargazers)
-[![issues](https://img.shields.io/github/issues/al-one/hass-xiaomi-miot)](https://github.com/al-one/hass-xiaomi-miot/issues)
+[![version](https://img.shields.io/github/manifest-json/v/WhiteWolf84/hass-xiaomi-miot?filename=custom_components%2Fxiaomi_miot%2Fmanifest.json)](https://github.com/WhiteWolf84/hass-xiaomi-miot/releases/latest)
+[![releases](https://img.shields.io/github/downloads/WhiteWolf84/hass-xiaomi-miot/total)](https://github.com/WhiteWolf84/hass-xiaomi-miot/releases)
+[![stars](https://img.shields.io/github/stars/WhiteWolf84/hass-xiaomi-miot)](https://github.com/WhiteWolf84/hass-xiaomi-miot/stargazers)
+[![issues](https://img.shields.io/github/issues/WhiteWolf84/hass-xiaomi-miot)](https://github.com/WhiteWolf84/hass-xiaomi-miot/issues)
 [![HACS](https://img.shields.io/badge/HACS-Default-orange.svg)](https://hacs.xyz)
 
 # Xiaomi Miot For HomeAssistant
 
-English | [简体中文](https://github.com/al-one/hass-xiaomi-miot/blob/master/README_zh.md)
+English | [简体中文](https://github.com/WhiteWolf84/hass-xiaomi-miot/blob/master/README_zh.md)
 
 [MIoT-Spec](https://iot.mi.com/new/doc/design/spec/overall): The protocol specification for Xiaomi IoT devices, is a standard designed by the Xiaomi IoT platform to describe the function definition of hardware products according to the networking mode of hardware products, the characteristics of product functions, the characteristics of user usage scenarios and the user's requirements for hardware product use experience specification.
 
@@ -20,9 +20,9 @@ This component uses the **miot** protocol to automatically integrate Xiaomi devi
 
 #### Method 1: [HACS](https://hacs.xyz)
 - First installation
-    > HACS > Integrations > ➕ EXPLORE & DOWNLOAD REPOSITORIES > [`Xiaomi Miot`](https://my.home-assistant.io/redirect/hacs_repository/?owner=al-one&repository=hass-xiaomi-miot) > DOWNLOAD THIS REPOSITORY
+    > HACS > Integrations > ➕ EXPLORE & DOWNLOAD REPOSITORIES > [`Xiaomi Miot`](https://my.home-assistant.io/redirect/hacs_repository/?owner=WhiteWolf84&repository=hass-xiaomi-miot) > DOWNLOAD THIS REPOSITORY
 - Update component
-    > HACS > Integrations > [`Xiaomi Miot`](https://my.home-assistant.io/redirect/hacs_repository/?owner=al-one&repository=hass-xiaomi-miot) > UPDATE / Redownload
+    > HACS > Integrations > [`Xiaomi Miot`](https://my.home-assistant.io/redirect/hacs_repository/?owner=WhiteWolf84&repository=hass-xiaomi-miot) > UPDATE / Redownload
 
 #### Method 2: Manually installation via Samba / SFTP
 > Download and copy `custom_components/xiaomi_miot` folder to `custom_components` folder in your HomeAssistant config folder
@@ -33,7 +33,7 @@ wget -O - https://get.hacs.vip | DOMAIN=xiaomi_miot bash -
 
 # Or
 
-wget -O - https://raw.githubusercontent.com/al-one/hass-xiaomi-miot/master/install.sh | ARCHIVE_TAG=latest bash -
+wget -O - https://raw.githubusercontent.com/WhiteWolf84/hass-xiaomi-miot/master/install.sh | ARCHIVE_TAG=latest bash -
 ```
 
 #### Method 4: shell_command service
@@ -56,7 +56,7 @@ Or click: [![Add Integration](https://my.home-assistant.io/badges/config_flow_st
 
 ### Add devices using Mi Account:
 Starting from the v0.4.4 version, the component has added support for selecting the connection device mode when integrated by account:
-- **Automatic**: The component will regularly update [the devices that support miot-spec in LAN](https://github.com/al-one/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/miot_local_devices.py), and automatically use the local connection for the supported devices (recommended)
+- **Automatic**: The component will regularly update [the devices that support miot-spec in LAN](https://github.com/WhiteWolf84/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/miot_local_devices.py), and automatically use the local connection for the supported devices (recommended)
 - **Local**: All devices filtered by the integrated configuration will use local connection. If you check the devices that do not support miot in LAN, they will be unavailable
 - **Cloud**: All devices filtered by the integrated configuration will use cloud connection. It is recommended that miio, BLE, ZigBee devices use this mode
 
@@ -82,13 +82,18 @@ xiaomi_miot:
 
 ### Translations
 
-> Looking forward to your [contribution](https://github.com/al-one/hass-xiaomi-miot/edit/master/custom_components/xiaomi_miot/core/translation_languages.py).
+Entity names and state values come from the MIoT spec, and are translated with the
+built-in dictionaries. **The dictionary is selected from your Home Assistant language
+automatically** — no configuration needed. Available: `it`, `zh`, `tr`, `ru`, `uk`,
+`el`, `de`, `pl`, `hu`, `en`. A language with no dictionary keeps the English names.
+
+> Looking forward to your [contribution](https://github.com/WhiteWolf84/hass-xiaomi-miot/edit/master/custom_components/xiaomi_miot/core/translation_languages.py).
 
 ```yaml
-# configuration.yaml
+# configuration.yaml — only needed to override the automatic choice
 xiaomi_miot:
-  language: it # Built-in dictionaries: `it`, `zh`, `tr`, `ru`, `uk`, `el`, `de`, `pl`, `hu`, `en`
-  # https://github.com/al-one/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/translation_languages.py
+  language: it
+  # https://github.com/WhiteWolf84/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/translation_languages.py
   translations:
     # Global dictionary
     idle: '空闲'
@@ -113,7 +118,7 @@ homeassistant:
 
 # Customize via device model
 xiaomi_miot:
-  # https://github.com/al-one/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/device_customizes.py
+  # https://github.com/WhiteWolf84/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/device_customizes.py
   device_customizes:
     chuangmi.plug.212a01:
       miot_local: true
@@ -340,7 +345,7 @@ data:
         - model: brand.device.model
 ```
 
-> [More services](https://github.com/al-one/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/services.yaml)
+> [More services](https://github.com/WhiteWolf84/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/services.yaml)
 
 
 ## Debug
