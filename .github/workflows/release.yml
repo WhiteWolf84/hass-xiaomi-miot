@@ -4,6 +4,12 @@ on:
   release:
     types: [published]
 
+# The default token is read-only, so uploading the asset needs this explicitly.
+# Granted on the job rather than repository wide, to keep every other workflow
+# read-only.
+permissions:
+  contents: write
+
 jobs:
   release-zip:
     runs-on: ubuntu-latest
