@@ -87,7 +87,7 @@ xiaomi_miot:
 ```yaml
 # configuration.yaml
 xiaomi_miot:
-  language: zh # Using the built-in dictionary, currently only `zh` is supported
+  language: it # Built-in dictionaries: `it`, `zh`, `tr`, `ru`, `uk`, `el`, `de`, `pl`, `hu`, `en`
   # https://github.com/al-one/hass-xiaomi-miot/blob/master/custom_components/xiaomi_miot/core/translation_languages.py
   translations:
     # Global dictionary
