@@ -34,6 +34,7 @@ import homeassistant.helpers.device_registry as dr
 import homeassistant.helpers.config_validation as cv
 
 from .core.const import *
+from .core.naming import entity_own_name
 from .core.utils import DeviceException, slugify_object_id, wildcard_models
 from .core import HassEntry, BasicEntity, XEntity # noqa
 from .core.device import Device, AsyncMiIO
@@ -698,15 +699,10 @@ class BaseEntity(BasicEntity):
         With has_entity_name Home Assistant composes that pairing itself, so an
         entity exposing the full string would render the device name twice.
 
-        Returning None is deliberate: it tells Home Assistant the entity has no
-        name of its own and should be shown under the device name alone, which
-        is the correct result for a main entity.
+        The rule itself lives in `core.naming`, shared with the converter based
+        entities so both hierarchies name things the same way.
         """
-        nam = f'{name or ""}'.strip()
-        dev = f'{getattr(self, "device_name", "") or ""}'.strip()
-        if dev and nam.lower().startswith(dev.lower()):
-            nam = nam[len(dev):].strip()
-        return nam or None
+        return entity_own_name(name, getattr(self, 'device_name', None))
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -985,6 +981,18 @@ class MiotEntity(MiioEntity):
         self._success_code = 0
         self.logger.info('%s: Initializing miot device with mapping: %s', self.name_model, self._miot_mapping)
 
+    @property
+    def name(self):
+        """None when this entity is built from the service that is the device.
+
+        `_name` here is "<device name> <service description>", so a vacuum would
+        otherwise render as "Hallway Robot Cleaner". See `Device.main_service`
+        for how the main service is picked.
+        """
+        if self._miot_service and self._miot_service is self.device.main_service:
+            return None
+        return super().name
+
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
         if not self._miot_service:
@@ -1196,7 +1204,9 @@ class BaseSubEntity(BaseEntity):
         self.hass = parent.hass
         self.device = parent.device
         self._unique_id = f'{parent.unique_id}-{attr}'
-        self._name = f'{parent.name} {attr}'
+        # A main entity has no name of its own, so fall back to the device name
+        # it stands for: the prefix is stripped again when the name is read.
+        self._name = f'{parent.name or parent.device_name} {attr}'
         self._state = STATE_UNKNOWN
         self._attr_state = None
         self._available = False

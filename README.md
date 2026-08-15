@@ -80,6 +80,33 @@ xiaomi_miot:
 
 > [⚙️ Configuration](https://my.home-assistant.io/redirect/config) > Devices and Services > [🧩 Integrations](https://my.home-assistant.io/redirect/integrations) > Xiaomi Miot > Options > ☑️ Enable miot cloud
 
+### Entity names
+
+Home Assistant builds a friendly name from the device name plus the entity's own
+name, so the entity only ever supplies the second half. The entity built from the
+service that *is* the device — the `dehumidifier` service of a dehumidifier — has
+no name of its own, and shows up under the device name alone instead of repeating
+it. Everything else is named after what it does.
+
+Names are resolved in this order, first match wins:
+
+1. A rename in the Home Assistant entity registry.
+2. `translations/<lang>.json` shipped with the integration.
+3. The MIoT spec, translated with the built-in dictionaries.
+
+The service that counts as the device is the one whose name matches the device
+type, as long as it is the only one — a three gang switch exposes `switch` three
+times and keeps all three names. Where the spec disagrees with itself, name it:
+
+```yaml
+# configuration.yaml
+xiaomi_miot:
+  device_customizes:
+    # declares `device:outlet` but exposes `service:switch`
+    chuangmi.plug.212a01:
+      main_service: switch
+```
+
 ### Translations
 
 Entity names and state values come from the MIoT spec, and are translated with the

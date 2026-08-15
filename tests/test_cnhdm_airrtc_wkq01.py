@@ -90,9 +90,12 @@ def test_parent_entity_metadata_and_identity(make_device, load_miot_spec):
         f"{device.unique_id}-fresh_air",
     ]
     assert len({air.unique_id, floor.unique_id, fresh.unique_id}) == 3
-    assert air._attr_name == "Thermostat"
-    assert floor._attr_name == "Floor Heating"
-    assert fresh._attr_name == "Fresh Air"
+    # `device:thermostat` exposing a single `service:thermostat`: that service
+    # is the device, so its entity has no name and Home Assistant shows the
+    # device name alone. The other two were given names of their own.
+    assert air.name is None
+    assert floor.name == "Floor Heating"
+    assert fresh.name == "Fresh Air"
     assert air._attr_translation_key == "thermostat"
     assert floor._attr_translation_key is None
     assert fresh._attr_translation_key is None
@@ -132,11 +135,11 @@ def test_complete_entity_set(make_device, load_miot_spec):
         "sensor": 1,
         "switch": 1,
     }
-    assert sorted(entity._attr_name for entity in entities["climate"]) == [
+    assert sorted(entity.name or "" for entity in entities["climate"]) == [
+        "",  # the thermostat service is the device itself
         "Floor Heating",
-        "Thermostat",
     ]
-    assert entities["fan"][0]._attr_name == "Fresh Air"
+    assert entities["fan"][0].name == "Fresh Air"
     assert entities["sensor"][0]._miot_property.unique_prop == "prop.3.1"
     assert entities["switch"][0]._miot_property.unique_prop == "prop.5.1"
     assert len(device.entities) == 6

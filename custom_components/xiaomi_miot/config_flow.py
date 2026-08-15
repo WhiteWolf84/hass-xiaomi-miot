@@ -813,6 +813,7 @@ class XiaomiMiotFlowHandler(config_entries.ConfigFlow, BaseFlowHandler, domain=D
         ]
         main_options = {
             'bool2selects': cv.multi_select({}),
+            'main_service': cv.string,
             'interval_seconds': cv.string,
             'chunk_properties': cv.string,
             'sensor_properties': cv.string,

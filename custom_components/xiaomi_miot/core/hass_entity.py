@@ -6,8 +6,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import Entity, EntityCategory
 from homeassistant.helpers.restore_state import ExtraStoredData, RestoredExtraData
+from homeassistant.helpers.typing import UNDEFINED
 
 from .const import DOMAIN
+from .naming import entity_own_name, spec_entity_name
 from .utils import get_customize_via_entity, wildcard_models, CustomConfigHelper
 from .miot_spec import MiotService, MiotProperty, MiotAction
 from .converters import BaseConv, InfoConv, MiotServiceConv, MiotPropConv, MiotActionConv
@@ -106,6 +108,7 @@ class XEntity(BasicEntity):
     _attr_available = False
     _attr_should_poll = False
     _attr_has_entity_name = True
+    _spec_name: Optional[str] = None
     _miot_service: Optional[MiotService] = None
     _miot_property: Optional[MiotProperty] = None
     _miot_action: Optional[MiotAction] = None
@@ -116,6 +119,7 @@ class XEntity(BasicEntity):
         self.conv = conv
         self.attr = conv.full_name
         self.log = device.log
+        main_service = device.main_service
 
         if isinstance(conv, MiotServiceConv):
             if conv.option.get('use_unique_attr'):
@@ -126,14 +130,18 @@ class XEntity(BasicEntity):
                 )
             else:
                 self.entity_id = conv.service.generate_entity_id(self, conv.domain)
-            self._attr_name = str(conv.service.friendly_desc)
+            self._spec_name = spec_entity_name(
+                device.name,
+                main_service=main_service,
+                service=conv.service,
+            )
             self._attr_translation_key = conv.service.name
             self._miot_service = conv.service
             self._miot_property = conv.prop
 
         elif isinstance(conv, MiotPropConv):
             self.entity_id = conv.prop.generate_entity_id(self, conv.domain)
-            self._attr_name = str(conv.prop.friendly_desc)
+            self._spec_name = spec_entity_name(device.name, prop=conv.prop)
             self._attr_translation_key = conv.prop.friendly_name
             self._miot_service = conv.prop.service
             self._miot_property = conv.prop
@@ -142,7 +150,7 @@ class XEntity(BasicEntity):
 
         elif isinstance(conv, MiotActionConv):
             self.entity_id = device.spec.generate_entity_id(self, conv.action.name, conv.domain)
-            self._attr_name = str(conv.action.friendly_desc)
+            self._spec_name = spec_entity_name(device.name, action=conv.action)
             self._attr_translation_key = conv.action.friendly_name
             self._miot_service = conv.action.service
             self._miot_action = conv.action
@@ -150,19 +158,21 @@ class XEntity(BasicEntity):
             self._attr_available = True
 
         else:
+            # Nothing in the spec names these, so the translation key is the
+            # only source and `translations/<lang>.json` has the last word.
             self.entity_id = device.spec.generate_entity_id(self, conv.attr, conv.domain)
-            # self._attr_name = conv.attr.replace('_', '').title()
             self._attr_translation_key = conv.attr
             if isinstance(conv, InfoConv):
                 self._attr_available = True
 
+        # A name spelled out in the converter is a deliberate choice by whoever
+        # described the device, so it outranks anything the spec or a
+        # translation would supply.
         if name := conv.option.get('name'):
-            self._attr_name = name
+            self._attr_name = entity_own_name(name, device.name)
             self._attr_translation_key = None
 
         self.listen_attrs = {self.attr} | set(conv.attrs)
-        if getattr(self, '_attr_name', None):
-            self._attr_name = self._attr_name.replace(device.name, '').strip()
         self._attr_unique_id = f'{device.unique_id}-{convert_unique_id(conv)}'
         self._attr_device_info = self.device.hass_device_info
         self._attr_extra_state_attributes = {}
@@ -201,6 +211,29 @@ class XEntity(BasicEntity):
 
         self.on_init()
         self.device.add_listener(self.on_device_update)
+
+    @property
+    def name(self):
+        """Fall back to the MIoT spec when nothing better names this entity.
+
+        The order mirrors Home Assistant's own: a name set outright wins, then
+        this integration's `translations/<lang>.json` for the platform -- which
+        is what makes those files worth maintaining -- and the spec applies
+        only where neither has anything to say. When the spec has nothing
+        either, the entity is the device: None travels through and Home
+        Assistant shows the device name on its own.
+
+        `Entity.name` cannot be asked before the entity joins a platform, since
+        it dereferences platform data to build the translation key, so it is
+        consulted only once that data exists.
+        """
+        if hasattr(self, '_attr_name'):
+            return self._attr_name
+        if self.platform_data is not None:
+            name = super().name
+            if name is not None and name is not UNDEFINED:
+                return name
+        return self._spec_name
 
     @cached_property
     def model(self):

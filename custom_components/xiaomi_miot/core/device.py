@@ -28,7 +28,7 @@ from .converters import (
     AttrConv, MiotTargetPositionConv, MiotTimePropConv,
 )
 from .coordinator import DataCoordinator
-from .miot_spec import MiotSpec, MiotProperty, MiotResults, MiotResult
+from .miot_spec import MiotSpec, MiotService, MiotProperty, MiotResults, MiotResult
 from .miio2miot import Miio2MiotHelper
 from .mini_miio import AsyncMiIO
 from .xiaomi_cloud import MiotCloud, MiCloudException
@@ -248,6 +248,40 @@ class Device(CustomConfigHelper):
     @cached_property
     def name_model(self):
         return f'{self.name}({self.model})'
+
+    @property
+    def main_service(self) -> Optional[MiotService]:
+        """The service that represents the device itself, if it has one.
+
+        A dehumidifier exposes `service:dehumidifier` alongside the services for
+        its light, its lock and its timer: that first one is not a feature of
+        the device, it *is* the device. The entity built from it therefore has
+        no name of its own, which is what keeps Home Assistant from rendering
+        "Dehumidifier Dehumidifier".
+
+        Resolution order:
+
+        1. `main_service` in the model customizes, naming the service. Needed
+           where the device type and the service disagree, as on a plug that
+           declares `device:outlet` but exposes `service:switch`.
+        2. The service carrying the device's own name, as long as it is the
+           only one: a multi gang switch repeats `service:switch` once per gang
+           and none of those gangs is the device.
+        3. Nothing. Every service then keeps the name it describes itself with,
+           which is the safe answer rather than a guessed one.
+        """
+        if not self.spec:
+            return None
+        if name := self.custom_config('main_service'):
+            return self.spec.get_service(name)
+        services = [
+            srv
+            for srv in self.spec.services.values()
+            if srv.name and srv.name == self.spec.name
+        ]
+        if len(services) != 1:
+            return None
+        return services[0]
 
     @cached_property
     def unique_id(self):

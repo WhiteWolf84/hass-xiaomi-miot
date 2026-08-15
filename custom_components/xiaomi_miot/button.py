@@ -35,7 +35,12 @@ class ButtonEntity(XEntity, BaseEntity):
     def on_init(self):
         self._attr_available = True
         if des := getattr(self.conv, 'description', None):
-            self._attr_name = f'{self._attr_name} {des}'
+            # One button per value of the property, so the value's description
+            # is the only thing telling them apart. It names the entity
+            # outright: a translation shared by the property would collapse
+            # every button onto the same name.
+            self._attr_name = ' '.join(filter(None, [self._spec_name, f'{des}']))
+            self._attr_translation_key = None
 
     def set_state(self, data: dict):
         pass
