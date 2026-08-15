@@ -61,10 +61,16 @@ def get_customize_via_entity(entity, key=None, default=None):
     if not isinstance(entity, Entity):
         return default
     cfg = {}
-    if entity.hass and entity.entity_id:
+    # Home Assistant assigns `entity_id` when the entity joins a platform, which
+    # is after the constructor has already read icon, device class and entity
+    # category. `customize_entity_id` is the id the registry holds for an entity
+    # that has been seen before, and one that has never existed cannot have been
+    # customized, so between them they cover every case.
+    entity_id = entity.entity_id or getattr(entity, 'customize_entity_id', None)
+    if entity.hass and entity_id:
         cfg = {
-            **(entity.hass.data[DATA_CUSTOMIZE].get(entity.entity_id) or {}),
-            **(entity.hass.data[DOMAIN].get(DATA_CUSTOMIZE, {}).get(entity.entity_id) or {}),
+            **(entity.hass.data[DATA_CUSTOMIZE].get(entity_id) or {}),
+            **(entity.hass.data[DOMAIN].get(DATA_CUSTOMIZE, {}).get(entity_id) or {}),
         }
         if key is not None and key in cfg:
             return cfg.get(key)

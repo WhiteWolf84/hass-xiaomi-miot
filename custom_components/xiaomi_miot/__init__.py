@@ -971,13 +971,7 @@ class MiotEntity(MiioEntity):
                     unreadable_properties=self.device._unreadable_properties,
                 ) or {}
             self._unique_id = f'{self._unique_id}-{self._miot_service.iid}'
-            self.entity_id = self._miot_service.generate_entity_id(self)
             self._attr_translation_key = self._miot_service.name
-        if not self.entity_id and self.model:
-            mls = f'{self.model}..'.split('.')
-            mac = re.sub(r'[\W_]+', '', self.unique_mac)
-            obj = f'{mls[0]}_{mls[2]}_{mac[-4:]}_{mls[1]}'
-            self.entity_id = f'{DOMAIN}.{slugify_object_id(obj)}'
         self._success_code = 0
         self.logger.info('%s: Initializing miot device with mapping: %s', self.name_model, self._miot_mapping)
 
@@ -1063,12 +1057,6 @@ class MiotEntity(MiioEntity):
     @property
     def miot_config(self):
         return self._config or {}
-
-    @property
-    def entity_id_prefix(self):
-        if not self._miot_service:
-            return None
-        return self._miot_service.spec.generate_entity_id(self)
 
     async def async_update_from_device(self):
         self._available = self.device.available
@@ -1236,16 +1224,13 @@ class BaseSubEntity(BaseEntity):
         self._parent_attrs = {}
 
     def generate_entity_id(self, domain=None):
-        entity_id = None
-        if self._option.get('entity_id'):
-            entity_id = self._option.get('entity_id')
-        elif not hasattr(self._parent, 'entity_id_prefix'):
-            pass
-        elif eip := self._parent.entity_id_prefix:
-            suf = self._attr
-            if self._dict_key:
-                suf = f'{suf}_{self._dict_key}'
-            entity_id = f'{eip}_{suf}'
+        """Claim an entity id only where the user asked for a specific one.
+
+        Home Assistant composes the id from the area, the device and the entity
+        name otherwise, which is what puts a sub entity under its own device
+        rather than under a model and a MAC address.
+        """
+        entity_id = self._option.get('entity_id')
         if not domain:
             domain = self._option.get('domain') or DOMAIN
         if entity_id is None:

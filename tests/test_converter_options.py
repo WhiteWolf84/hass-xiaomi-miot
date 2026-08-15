@@ -150,7 +150,7 @@ def test_explicit_attrs_make_distinct_converter_full_names(load_miot_spec):
     assert fresh.full_name == "fan.fresh_air"
 
 
-def test_fixed_name_and_attr_based_entity_id(make_device, load_miot_spec):
+def test_fixed_name_and_attr_based_identity(make_device, load_miot_spec):
     device = make_device(
         load_miot_spec("cnhdm.airrtc.wkq01.json"),
         customizes={"converters": [{
@@ -168,8 +168,9 @@ def test_fixed_name_and_attr_based_entity_id(make_device, load_miot_spec):
     )
     entity = ClimateEntity(device, device.find_converter("climate.floor_heating"))
 
+    # `use_unique_attr` moves the identity onto the attr; the entity id is
+    # Home Assistant's to compose from the device and the name.
     assert entity.unique_id == f"{device.unique_id}-floor_heating"
-    assert entity.entity_id.endswith("_floor_heating")
     assert entity._attr_name == "Floor Heating"
     assert entity._attr_translation_key is None
 
@@ -187,7 +188,6 @@ def test_service_entity_defaults_remain_unchanged(make_device, load_miot_spec):
     entity = ClimateEntity(device, converter)
 
     assert entity.unique_id == f"{device.unique_id}-2"
-    assert "thermostat" in entity.entity_id
     assert entity._attr_translation_key == "thermostat"
 
 

@@ -4,6 +4,7 @@ from functools import cached_property
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import entity_registry
 from homeassistant.helpers.entity import Entity, EntityCategory
 from homeassistant.helpers.restore_state import ExtraStoredData, RestoredExtraData
 from homeassistant.helpers.typing import UNDEFINED
@@ -25,6 +26,7 @@ class BasicEntity(Entity, CustomConfigHelper):
     hass: HomeAssistant = None
     device: 'Device' = None
     conv: 'BaseConv' = None
+    customize_entity_id: Optional[str] = None
 
     def custom_config(self, key=None, default=None):
         return get_customize_via_entity(self, key, default)
@@ -122,14 +124,6 @@ class XEntity(BasicEntity):
         main_service = device.main_service
 
         if isinstance(conv, MiotServiceConv):
-            if conv.option.get('use_unique_attr'):
-                self.entity_id = device.spec.generate_entity_id(
-                    self,
-                    conv.attr,
-                    conv.domain,
-                )
-            else:
-                self.entity_id = conv.service.generate_entity_id(self, conv.domain)
             self._spec_name = spec_entity_name(
                 device.name,
                 main_service=main_service,
@@ -140,7 +134,6 @@ class XEntity(BasicEntity):
             self._miot_property = conv.prop
 
         elif isinstance(conv, MiotPropConv):
-            self.entity_id = conv.prop.generate_entity_id(self, conv.domain)
             self._spec_name = spec_entity_name(device.name, prop=conv.prop)
             self._attr_translation_key = conv.prop.friendly_name
             self._miot_service = conv.prop.service
@@ -149,7 +142,6 @@ class XEntity(BasicEntity):
                 self._attr_available = True
 
         elif isinstance(conv, MiotActionConv):
-            self.entity_id = device.spec.generate_entity_id(self, conv.action.name, conv.domain)
             self._spec_name = spec_entity_name(device.name, action=conv.action)
             self._attr_translation_key = conv.action.friendly_name
             self._miot_service = conv.action.service
@@ -160,7 +152,6 @@ class XEntity(BasicEntity):
         else:
             # Nothing in the spec names these, so the translation key is the
             # only source and `translations/<lang>.json` has the last word.
-            self.entity_id = device.spec.generate_entity_id(self, conv.attr, conv.domain)
             self._attr_translation_key = conv.attr
             if isinstance(conv, InfoConv):
                 self._attr_available = True
@@ -176,6 +167,14 @@ class XEntity(BasicEntity):
         self._attr_unique_id = f'{device.unique_id}-{convert_unique_id(conv)}'
         self._attr_device_info = self.device.hass_device_info
         self._attr_extra_state_attributes = {}
+
+        # The entity id belongs to Home Assistant, which composes it from the
+        # area, the device and the entity name once the entity joins a platform.
+        # Only the customizes have to know it any earlier, and for those the
+        # registry can be asked by unique id.
+        self.customize_entity_id = entity_registry.async_get(self.hass).async_get_entity_id(
+            conv.domain or DOMAIN, DOMAIN, self._attr_unique_id,
+        )
 
         self._attr_icon = self.custom_config('icon') or conv.option.get('icon')
         self._attr_device_class = self.custom_config('device_class') or conv.option.get('device_class')
@@ -234,6 +233,16 @@ class XEntity(BasicEntity):
             if name is not None and name is not UNDEFINED:
                 return name
         return self._spec_name
+
+    def _default_to_device_class_name(self):
+        """Never let the device class name an entity the spec already named.
+
+        Home Assistant falls back to the device class for an entity with no
+        name, which would call every temperature sensor on a device
+        "Temperature" -- and a device that reports two of them would end up
+        with one name, and one entity id, for both. The spec tells them apart.
+        """
+        return False
 
     @cached_property
     def model(self):

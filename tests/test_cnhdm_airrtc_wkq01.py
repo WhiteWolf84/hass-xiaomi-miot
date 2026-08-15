@@ -99,9 +99,10 @@ def test_parent_entity_metadata_and_identity(make_device, load_miot_spec):
     assert air._attr_translation_key == "thermostat"
     assert floor._attr_translation_key is None
     assert fresh._attr_translation_key is None
-    assert "thermostat" in air.entity_id
-    assert floor.entity_id.endswith("_floor_heating")
-    assert fresh.entity_id.endswith("_fresh_air")
+    # Entity ids are not the integration's to hand out any more: Home
+    # Assistant composes them once the entity joins a platform, which
+    # `test_naming_by_model` checks against a real config entry.
+    assert [air.entity_id, floor.entity_id, fresh.entity_id] == [None, None, None]
 
 
 def collect_entities(device):

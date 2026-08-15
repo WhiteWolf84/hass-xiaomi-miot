@@ -94,6 +94,18 @@ Names are resolved in this order, first match wins:
 2. `translations/<lang>.json` shipped with the integration.
 3. The MIoT spec, translated with the built-in dictionaries.
 
+### Entity ids
+
+Entity ids belong to Home Assistant, which builds them from the area, the device
+and the entity name — so `humidifier.bedroom_dehumidifier`, not
+`humidifier.xiaomi_lite_f59c_dehumidifier`. Rename the device or move it to
+another area and **Settings → Devices → ⋮ → Regenerate entity IDs** follows
+along.
+
+Already registered entities never change id on their own: Home Assistant keeps
+the id it has for a known `unique_id`, so upgrading is safe and any id you chose
+by hand stays chosen.
+
 The service that counts as the device is the one whose name matches the device
 type, as long as it is the only one — a three gang switch exposes `switch` three
 times and keeps all three names. Where the spec disagrees with itself, name it:

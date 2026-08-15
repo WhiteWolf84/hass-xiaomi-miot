@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.const import CONF_HOST, CONF_TOKEN, CONF_MODEL, CONF_USERNAME, EntityCategory
 from homeassistant.util import dt
 from homeassistant.components import persistent_notification
+from homeassistant.helpers import entity_registry
 from homeassistant.helpers.event import async_call_later, async_track_time_interval
 import homeassistant.helpers.device_registry as dr
 
@@ -1039,14 +1040,21 @@ class Device(CustomConfigHelper):
         self.data['offline_times'] = offline_times
 
     async def async_purge_entities(self, _now):
-        if not self.spec:
+        """Keep only a day of history for the info button, which changes constantly.
+
+        Home Assistant owns the entity id, so the registry is asked for it by
+        unique id rather than rebuilt from the model and the MAC.
+        """
+        entity_id = entity_registry.async_get(self.hass).async_get_entity_id(
+            'button', DOMAIN, f'{self.unique_id}-{InfoConverter.attr}',
+        )
+        if not entity_id:
             return
-        glob = self.spec.generate_entity_id_by_mac(self.info.unique_id, 'info', 'button')
         await self.hass.services.async_call('recorder', 'purge_entities', {
             'keep_days': 1,
-            'entity_globs': [glob],
+            'entity_id': entity_id,
         })
-        self.log.info('Purge entities: %s', glob)
+        self.log.info('Purge entities: %s', entity_id)
 
     async def async_get_properties(self, mapping, update_entity=True, throw=False, **kwargs):
         if not self.spec:

@@ -7,7 +7,11 @@ either these tables move -- deliberately, in the same commit -- or nothing does.
 `unique_id` is the column that costs users the most. Home Assistant keys the
 entity registry on it, so a changed unique_id is a brand new entity: the old one
 goes stale and its history, automations and dashboard cards point at nothing.
-The entity ids sit next to it for the same reason.
+
+Entity ids belong to Home Assistant, which composes them from the area, the
+device and the entity name when the entity joins a platform. They are therefore
+asserted against a real config entry at the bottom of this file, not against a
+freshly constructed entity, where they are still None.
 
 Every fixture is the spec as published by miot-spec.org, saved verbatim.
 """
@@ -16,13 +20,17 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from homeassistant.const import CONF_HOST, CONF_NAME, CONF_TOKEN
 from homeassistant.core import split_entity_id, valid_entity_id
+from homeassistant.helpers import entity_registry as er
+from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.xiaomi_miot import DOMAIN  # noqa: F401
+from custom_components.xiaomi_miot import DOMAIN
 from custom_components.xiaomi_miot import (  # noqa: F401
     binary_sensor, button, climate, cover, fan, humidifier, light,
     number, select, sensor, switch, text, time,
 )
+from custom_components.xiaomi_miot.core.device import Device
 
 TRANSLATIONS = (
     Path(__file__).parents[1] / 'custom_components' / 'xiaomi_miot' / 'translations'
@@ -33,20 +41,20 @@ DOMAINS = [
     'light', 'number', 'select', 'sensor', 'switch', 'text', 'time',
 ]
 
-# (domain, entity_id, unique_id after the device's own prefix, name, translation_key)
+# (domain, unique_id after the device's own prefix, name, translation_key)
 DEHUMIDIFIER_ENTITIES = [
-    ('button', 'button.xiaomi_lite_eeff_info', '-info', None, 'info'),
-    ('humidifier', 'humidifier.xiaomi_lite_eeff_dehumidifier', '-2', None, 'dehumidifier'),
-    ('light', 'light.xiaomi_lite_eeff_indicator_light', '-5', 'Indicator Light', 'indicator_light'),
-    ('number', 'number.xiaomi_lite_eeff_delay_time', '-delay-8.delay_time-2', 'Delay Delay Time', 'delay-delay_time'),
-    ('select', 'select.xiaomi_lite_eeff_mode', '-indicator_light-5.mode-2', 'Indicator Light Mode', 'indicator_light-mode'),
-    ('sensor', 'sensor.xiaomi_lite_eeff_delay_remain_time', '-delay-8.delay_remain_time-3', 'Delay Delay Remain Time', 'delay-delay_remain_time'),
-    ('sensor', 'sensor.xiaomi_lite_eeff_device_fault', '-dehumidifier-2.fault-2', 'Dehumidifier Device Fault', 'dehumidifier-fault'),
-    ('sensor', 'sensor.xiaomi_lite_eeff_relative_humidity', '-environment-3.relative_humidity-1', 'Environment Relative Humidity', 'environment-relative_humidity'),
-    ('sensor', 'sensor.xiaomi_lite_eeff_temperature', '-environment-3.temperature-2', 'Environment Temperature', 'environment-temperature'),
-    ('switch', 'switch.xiaomi_lite_eeff_alarm', '-alarm-4.alarm-1', 'Alarm', 'alarm-alarm'),
-    ('switch', 'switch.xiaomi_lite_eeff_delay', '-delay-8.delay-1', 'Delay', 'delay-delay'),
-    ('switch', 'switch.xiaomi_lite_eeff_physical_control_locked', '-physical_controls_locked-6.physical_controls_locked-1', 'Physical Control Locked', 'physical_controls_locked-physical_controls_locked'),
+    ('button', '-info', None, 'info'),
+    ('humidifier', '-2', None, 'dehumidifier'),
+    ('light', '-5', 'Indicator Light', 'indicator_light'),
+    ('number', '-delay-8.delay_time-2', 'Delay Delay Time', 'delay-delay_time'),
+    ('select', '-indicator_light-5.mode-2', 'Indicator Light Mode', 'indicator_light-mode'),
+    ('sensor', '-dehumidifier-2.fault-2', 'Dehumidifier Device Fault', 'dehumidifier-fault'),
+    ('sensor', '-delay-8.delay_remain_time-3', 'Delay Delay Remain Time', 'delay-delay_remain_time'),
+    ('sensor', '-environment-3.relative_humidity-1', 'Environment Relative Humidity', 'environment-relative_humidity'),
+    ('sensor', '-environment-3.temperature-2', 'Environment Temperature', 'environment-temperature'),
+    ('switch', '-alarm-4.alarm-1', 'Alarm', 'alarm-alarm'),
+    ('switch', '-delay-8.delay-1', 'Delay', 'delay-delay'),
+    ('switch', '-physical_controls_locked-6.physical_controls_locked-1', 'Physical Control Locked', 'physical_controls_locked-physical_controls_locked'),
 ]
 
 
@@ -63,17 +71,22 @@ def collect_entities(device):
 def entity_rows(device):
     with patch('custom_components.xiaomi_miot.core.device.async_call_later'):
         entities = collect_entities(device)
-    return sorted(
+    rows = sorted(
         (
             domain,
-            entity.entity_id,
             entity.unique_id.replace(device.unique_id, ''),
             entity.name,
             entity.translation_key,
         )
         for domain, items in entities.items()
         for entity in items
-    ), [entity for items in entities.values() for entity in items]
+    )
+    pairs = [
+        (domain, entity)
+        for domain, items in entities.items()
+        for entity in items
+    ]
+    return rows, pairs
 
 
 def build(make_device, load_miot_spec, model, customizes=None):
@@ -109,12 +122,12 @@ def test_main_service_can_be_named_in_the_customizes(make_device, load_miot_spec
     assert device.main_service.name == 'switch'
 
     rows, _ = entity_rows(device)
-    switches = [row for row in rows if row[0] == 'switch']
-    assert switches == [('switch', 'switch.chuangmi_212a01_eeff_switch', '-2', None, 'switch')]
+    assert [row for row in rows if row[0] == 'switch'] == [
+        ('switch', '-2', None, 'switch'),
+    ]
 
     # the indicator light is a feature of the plug and keeps saying so
-    lights = [row for row in rows if row[0] == 'light']
-    assert [row[3] for row in lights] == ['Indicator Light']
+    assert [row[2] for row in rows if row[0] == 'light'] == ['Indicator Light']
 
 
 def test_dehumidifier_entities(make_device, load_miot_spec):
@@ -126,26 +139,24 @@ def test_dehumidifier_entities(make_device, load_miot_spec):
 
 def test_only_the_main_entity_stands_for_the_device(make_device, load_miot_spec):
     device = build(make_device, load_miot_spec, 'xiaomi.derh.lite')
-    _, entities = entity_rows(device)
+    _, pairs = entity_rows(device)
     unnamed = [
-        entity for entity in entities
+        entity for _, entity in pairs
         if entity.name is None and not entity.translation_key
     ]
     assert unnamed == []
 
     main = [
-        entity for entity in entities
+        entity for _, entity in pairs
         if entity._miot_service is device.main_service and entity.name is None
     ]
-    assert [entity.entity_id for entity in main] == [
-        'humidifier.xiaomi_lite_eeff_dehumidifier',
-    ]
+    assert [entity.unique_id.replace(device.unique_id, '') for entity in main] == ['-2']
 
 
 def test_every_gang_of_a_multi_gang_switch_keeps_its_name(make_device, load_miot_spec):
     device = build(make_device, load_miot_spec, 'lumi.switch.n3acn3')
     rows, _ = entity_rows(device)
-    assert [row[3] for row in rows if row[0] == 'switch'] == [
+    assert [row[2] for row in rows if row[0] == 'switch'] == [
         'Left Switch Service',
         'Middle Switch Service',
         'Right Switch Service',
@@ -156,17 +167,17 @@ def test_every_gang_of_a_multi_gang_switch_keeps_its_name(make_device, load_miot
     'model',
     ['xiaomi.derh.lite', 'lumi.switch.n3acn3', 'chuangmi.plug.212a01'],
 )
-def test_entity_ids_are_valid_and_match_their_platform(make_device, load_miot_spec, model):
-    """Home Assistant reports these two as errors from 2027.2 and 2027.5.
+def test_no_entity_claims_an_entity_id(make_device, load_miot_spec, model):
+    """Setting `entity_id` opts the entity out of Home Assistant's naming.
 
-    Setting `entity_id` from the integration is allowed, but only where the id
-    is well formed and lives in the platform's own domain.
+    Home Assistant stores an integration supplied id as `suggested_object_id`,
+    which wins over the area and device prefixed form and is handed straight
+    back by "regenerate entity IDs". Leaving it unset is what keeps the entity
+    id in step with the device and area the user has arranged.
     """
     device = build(make_device, load_miot_spec, model)
-    rows, _ = entity_rows(device)
-    for domain, entity_id, *_ in rows:
-        assert valid_entity_id(entity_id), entity_id
-        assert split_entity_id(entity_id)[0] == domain, entity_id
+    _, pairs = entity_rows(device)
+    assert [entity.entity_id for _, entity in pairs if entity.entity_id] == []
 
 
 @pytest.mark.parametrize(
@@ -178,21 +189,21 @@ def test_unnamed_entities_are_named_by_a_translation(make_device, load_miot_spec
 
     Nothing else may be nameless: outside a platform the spec fallback is all
     there is, so a None here that `en.json` does not answer would reach the user
-    as a bare device name on a feature entity.
+    as a bare device name on a feature entity -- and, now that the entity id is
+    derived from the name, as a bare device name in the entity id too.
     """
     device = build(make_device, load_miot_spec, model)
     with open(TRANSLATIONS / 'en.json', encoding='utf-8') as file:
         english = json.load(file)['entity']
 
-    _, entities = entity_rows(device)
-    for entity in entities:
+    _, pairs = entity_rows(device)
+    for domain, entity in pairs:
         if entity.name is not None:
             continue
         if entity._miot_service is not None and entity._miot_service is device.main_service:
             continue
-        domain = split_entity_id(entity.entity_id)[0]
         translated = english.get(domain, {}).get(entity.translation_key, {})
-        assert translated.get('name'), f'{entity.entity_id} has no name anywhere'
+        assert translated.get('name'), f'{entity.unique_id} has no name anywhere'
 
 
 def test_the_main_entity_must_not_be_given_a_name_by_a_translation():
@@ -216,3 +227,76 @@ def test_the_main_entity_must_not_be_given_a_name_by_a_translation():
             for key in keys:
                 named = entities.get(domain, {}).get(key, {}).get('name')
                 assert not named, f'{path.name}: {domain}.{key} must have no name'
+
+
+async def setup_dehumidifier(hass, load_miot_spec, device_name):
+    """Run a real config entry so Home Assistant assigns the entity ids."""
+    spec = load_miot_spec('xiaomi.derh.lite.json')
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            'did': 'test-device',
+            'mac': '14:d8:81:9c:f5:9c',
+            CONF_NAME: device_name,
+            CONF_HOST: '127.0.0.1',
+            CONF_TOKEN: '0' * 32,
+            'model': 'xiaomi.derh.lite',
+            'urn': spec.type,
+        },
+    )
+    entry.add_to_hass(hass)
+
+    async def async_init_from_fixture(device):
+        device.spec = load_miot_spec('xiaomi.derh.lite.json')
+        device.init_converters()
+
+    with (
+        patch.object(Device, 'async_init', async_init_from_fixture),
+        patch('custom_components.xiaomi_miot.core.device.async_call_later'),
+        patch(
+            'custom_components.xiaomi_miot.SUPPORTED_DOMAINS',
+            ['button', 'humidifier', 'light', 'number', 'select', 'sensor', 'switch'],
+        ),
+    ):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+
+    registry = er.async_get(hass)
+    entities = {
+        item.unique_id: item.entity_id
+        for item in registry.entities.values()
+        if item.platform == DOMAIN
+    }
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+    return entry, entities
+
+
+async def test_home_assistant_composes_the_entity_ids(hass, load_miot_spec):
+    """The device name leads, and the main entity is the device name alone."""
+    _, entities = await setup_dehumidifier(hass, load_miot_spec, 'Deumidificatore')
+    by_id = sorted(entities.values())
+
+    assert 'humidifier.deumidificatore' in by_id
+    assert 'light.deumidificatore_indicator_light' in by_id
+    # `en.json` names this one "Child Lock", and a translation outranks the
+    # spec for the entity id exactly as it does for the friendly name
+    assert 'switch.deumidificatore_child_lock' in by_id
+    assert 'button.deumidificatore_info' in by_id
+
+    for entity_id in by_id:
+        assert valid_entity_id(entity_id), entity_id
+        assert split_entity_id(entity_id)[1].startswith('deumidificatore'), entity_id
+
+
+async def test_a_renamed_device_leads_the_entity_ids_of_a_fresh_install(
+    hass, load_miot_spec,
+):
+    """Nothing of the model or the MAC survives in the id any more."""
+    _, entities = await setup_dehumidifier(hass, load_miot_spec, 'Camera')
+
+    assert 'humidifier.camera' in entities.values()
+    assert not [
+        entity_id for entity_id in entities.values()
+        if 'xiaomi_lite' in entity_id or 'f59c' in entity_id
+    ]

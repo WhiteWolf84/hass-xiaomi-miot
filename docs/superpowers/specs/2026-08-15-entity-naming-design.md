@@ -22,7 +22,6 @@ The implementation requires Home Assistant 2026.1.0 or newer and is verified aga
 ## Non-goals
 
 - No migration of the legacy `MiotEntity` platforms (`vacuum`, `water_heater`, `media_player`, `remote`, `alarm_control_panel`, `device_tracker`) onto `XEntity`. They are reached by the shared naming rule instead.
-- No change to how `entity_id` is generated. The integration keeps assigning it from model, MAC and spec description.
 - No change to the built-in `TRANSLATION_LANGUAGES` dictionaries, which stay the fallback for the open-ended MIoT namespace.
 - No change to `friendly_desc` or `short_desc` on spec objects, so names like "Environment Relative Humidity" keep their current wording.
 - No automatic detection of a main service where the device type and the service names disagree. That case is data, not a heuristic.
@@ -84,13 +83,33 @@ The legacy hierarchy keeps `_name` as its source and only adds the main-service 
 
 `ButtonEntity.on_init` appends a value description to distinguish one button per enum value. That name is now set as `_attr_name` with the translation key cleared, because a translation keyed on the property would otherwise collapse every value button onto one name.
 
+### Entity ids belong to Home Assistant
+
+The integration used to assign `entity_id` itself, in twelve places, from model + MAC + spec description. Home Assistant records such an id as `suggested_object_id`, and its own generator ranks that **above** the area and device prefixed form (`entity_registry.py:1352-1362`), returning it verbatim:
+
+```python
+if name is None and overridden_name is not None:
+    full_name = overridden_name          # overridden_name = suggested_object_id
+```
+
+The visible consequence was that "regenerate entity IDs" offered to replace `switch.bedroom_dehumidifier_child_lock` with `switch.xiaomi_lite_f59c_physical_control_locked` — undoing the user's arrangement rather than following it. Home Assistant itself says integrations should not do this, in the `report_usage()` text at `entity_platform.py:891`.
+
+So the integration no longer claims an entity id. The one exception is an id written explicitly in the customizes for a sub entity, which is the user asking for a specific id.
+
+Two things had to move with it:
+
+- `XEntity.__init__` reads `icon`, `device_class` and `entity_category` from the customizes, which are keyed on the entity id — and the id does not exist until the entity joins a platform. `customize_entity_id` fills the gap by asking the registry for the id belonging to this `unique_id`. An entity that has never existed cannot have been customized, so the lookup covers every real case.
+- `Device.async_purge_entities()` built a recorder glob out of the same model + MAC pattern. It now asks the registry for the info button's id.
+
+`_default_to_device_class_name()` returns False. Home Assistant names an entity after its device class when nothing else names it, which would call every temperature sensor on a device "Temperature" — one name, and after this change one entity id, for both.
+
 ## Compatibility
 
 `unique_id` is unaffected: it is built from `device.unique_id` and the converter's service iid, action or property unique name, none of which reads a name.
 
-`entity_id` is unaffected twice over. The integration derives it from model, MAC and the spec's `desc_name`, never from `_attr_name`; and `entity_registry.async_get_or_create()` returns the existing entry for a known `unique_id`, updating `original_name` and leaving `entity_id` alone. Only an explicit `new_entity_id`, which is a user rename, changes it.
+Existing entity ids are unaffected. `entity_registry.async_get_or_create()` returns the existing entry for a known `unique_id`, updating `original_name` and leaving `entity_id` alone; only an explicit `new_entity_id`, which is a user rename, changes it. What changes is what a *new* installation gets, and what "regenerate entity IDs" proposes for an existing one — both of which now follow the area, the device and the entity name.
 
-What does change is `original_name` in the registry and the rendered friendly name, for the main entity of every device that has one. An existing user rename in the entity registry keeps winning, since Home Assistant applies it above everything here.
+`original_name` in the registry and the rendered friendly name change for the main entity of every device that has one. An existing user rename in the entity registry keeps winning, since Home Assistant applies it above everything here.
 
 `_unprefix_original_name()` in Home Assistant returns None as soon as `has_entity_name` is set, so no de-duplication arrives from Home Assistant's side. The integration has to be correct on its own.
 
@@ -111,15 +130,21 @@ What does change is `original_name` in the registry and the rendered friendly na
 
 Three invariants sit alongside the tables:
 
-- Every generated `entity_id` is valid and lives in its platform's domain, which Home Assistant turns into errors in 2027.2 and 2027.5.
-- Every nameless entity is either the main entity or has a name in `en.json`.
+- No entity claims an `entity_id`, which is what keeps Home Assistant's own generation in charge.
+- Every nameless entity is either the main entity or has a name in `en.json`. A name missing here would now reach the user twice: as a bare device name, and as a bare device name in the entity id.
 - No translation file gives a `name` to a main-service translation key, which would put the duplication back.
+
+### Entity ids
+
+Two tests set up a real `MockConfigEntry` against the `xiaomi.derh.lite` fixture and read the ids Home Assistant assigns, since those do not exist before an entity joins a platform. They pin that the device name leads every id, that the main entity is the device name alone, and that nothing of the model or the MAC survives.
 
 ## Acceptance Criteria
 
 - A dehumidifier named "Deumidificatore" renders its main entity as "Deumidificatore", not "Deumidificatore Deumidificatore".
 - The other eleven entities of `xiaomi.derh.lite` keep their names and their `unique_id`s.
 - A three gang switch names all three gangs.
-- A plug with `main_service: switch` renders its switch entity as the device name, and its indicator light as "<device> Indicator Light".
-- A name in `translations/<lang>.json` overrides the MIoT spec for every entity kind.
+- A plug with `main_service: switch` renders its switch entity as the device name, and its indicator light as "Indicator Light" under the device.
+- A name in `translations/<lang>.json` overrides the MIoT spec for every entity kind, and drives the entity id with it.
+- A fresh install of `xiaomi.derh.lite` on a device named "Deumidificatore" produces `humidifier.deumidificatore`, not `humidifier.xiaomi_lite_f59c_dehumidifier`.
+- "Regenerate entity IDs" proposes ids built from the area, the device and the entity name.
 - The full suite passes on Home Assistant 2026.8 under Python 3.14.

@@ -294,7 +294,6 @@ class MihomeMessageSensor(MiCoordinatorEntity, BaseEntity, RestoreEntity):
         self.hass = hass
         self.cloud = cloud
         self.message = {}
-        self.entity_id = f'{ENTITY_DOMAIN}.mi_{cloud.user_id}_message'
         self._attr_unique_id = f'{DOMAIN}-mihome-message-{cloud.user_id}'
         self._attr_name = f'Xiaomi {cloud.user_id} message'
         self._attr_icon = 'mdi:message'
@@ -430,7 +429,6 @@ class MihomeSceneHistorySensor(MiCoordinatorEntity, BaseEntity, RestoreEntity):
         self.cloud = cloud
         self.home_id = int(home_id)
         self.owner_user_id = int(owner_user_id)
-        self.entity_id = f'{ENTITY_DOMAIN}.mi_{cloud.user_id}_{home_id}_scene_history'
         self._attr_unique_id = f'{DOMAIN}-mihome-scene-history-{cloud.user_id}_{home_id}'
         self._attr_name = f'Xiaomi {cloud.user_id}_{home_id} Scene History'
         self._attr_icon = 'mdi:message'
