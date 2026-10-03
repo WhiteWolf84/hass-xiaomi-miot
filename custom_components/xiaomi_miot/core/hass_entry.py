@@ -19,7 +19,6 @@ CLOUD_DEVICES_REFRESH_INTERVAL = 300
 
 
 class HassEntry:
-
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
         self.id = entry.entry_id
         self.hass = hass
