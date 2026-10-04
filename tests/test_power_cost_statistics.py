@@ -218,6 +218,8 @@ async def test_actual_platform_restore_update_and_unload(hass, make_device, free
     })
     device.available = True
     sensor = SensorEntity(device, device.find_converter(f'sensor.{key}'))
+    # The fork leaves entity ids to Home Assistant, so pin one for the restore cache.
+    sensor.entity_id = f'sensor.test_energy_{key}'
     now = datetime.now(local_zone(hass))
     extra = {sensor.attr: 17.5} if legacy else {
         'native_value': 17.5, 'native_unit_of_measurement': 'kWh',
