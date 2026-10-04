@@ -4,7 +4,7 @@ A UI-configured account with messages disabled must still register its
 account slot before the scene history block indexes it.
 """
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 from custom_components.xiaomi_miot import DOMAIN, init_integration_data
 from custom_components.xiaomi_miot import sensor as sensor_module
@@ -45,7 +45,7 @@ async def test_scene_history_setup_with_disabled_message(hass):
              sensor_module, "MihomeSceneHistorySensor", _DummySceneHistorySensor
          ), \
          patch.object(sensor_module, "async_setup_config_entry", AsyncMock()):
-        await sensor_module.async_setup_entry(hass, SimpleNamespace(), AsyncMock())
+        await sensor_module.async_setup_entry(hass, SimpleNamespace(), Mock())
 
     account = hass.data[DOMAIN]["accounts"]["1583113750"]
     assert account["scene_history_123"] is _DummySceneHistorySensor.created[0]
@@ -63,6 +63,6 @@ async def test_scene_history_setup_keeps_existing_slot(hass):
 
     with patch.object(sensor_module.HassEntry, "init", return_value=entry), \
          patch.object(sensor_module, "async_setup_config_entry", AsyncMock()):
-        await sensor_module.async_setup_entry(hass, SimpleNamespace(), AsyncMock())
+        await sensor_module.async_setup_entry(hass, SimpleNamespace(), Mock())
 
     assert hass.data[DOMAIN]["accounts"]["1583113750"] == {"keep": True}
