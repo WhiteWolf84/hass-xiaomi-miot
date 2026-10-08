@@ -66,20 +66,3 @@ def test_hass_device_uses_unambiguous_identifier_lookup(hass):
     registry.async_get_device_by_identifier.assert_called_once_with(
         next(iter(device.identifiers)), device.entry.id
     )
-
-
-def test_device_info_falls_back_to_parent_identifier(hass):
-    """Keep proxy device links working on HA versions before 2026.8."""
-    parent = _make_device(hass, unique_id="aa:bb:cc:dd:ee:01")
-    child = _make_device(hass, unique_id="aa:bb:cc:dd:ee:02")
-    child._proxy_device = parent
-    registry = SimpleNamespace(async_get_device=Mock())
-
-    with patch(
-        "custom_components.xiaomi_miot.core.device.dr.async_get",
-        return_value=registry,
-    ):
-        device_info = child.hass_device_info
-
-    assert device_info["via_device"] == next(iter(parent.identifiers))
-    assert "via_device_id" not in device_info

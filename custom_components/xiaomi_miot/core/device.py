@@ -380,13 +380,8 @@ class Device(CustomConfigHelper):
             'suggested_area': self.info.room_name,
             'configuration_url': f'https://home.miot-spec.com/s/{self.model}',
         }
-        if self._proxy_device:
-            dev_reg = dr.async_get(self.hass)
-            if hasattr(dev_reg, 'async_get_device_by_identifier'):
-                if parent := self._proxy_device.hass_device:
-                    device_info['via_device_id'] = parent.id
-            else:
-                device_info['via_device'] = next(iter(self._proxy_device.identifiers))
+        if self._proxy_device and (parent := self._proxy_device.hass_device):
+            device_info['via_device_id'] = parent.id
         return device_info
 
     @property
@@ -441,12 +436,9 @@ class Device(CustomConfigHelper):
 
     @property
     def hass_device(self):
-        dev_reg = dr.async_get(self.hass)
-        if hasattr(dev_reg, 'async_get_device_by_identifier'):
-            return dev_reg.async_get_device_by_identifier(
-                next(iter(self.identifiers)), self.entry.id
-            )
-        return dev_reg.async_get_device(self.identifiers)
+        return dr.async_get(self.hass).async_get_device_by_identifier(
+            next(iter(self.identifiers)), self.entry.id
+        )
 
     @property
     def hass_device_disabled(self):
