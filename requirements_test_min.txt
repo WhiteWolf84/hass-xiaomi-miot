@@ -1,3 +1,2 @@
 -r requirements_test.txt
-pytest-homeassistant-custom-component==0.13.305
-pycares<5
+pytest-homeassistant-custom-component==0.13.371

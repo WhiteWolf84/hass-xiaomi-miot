@@ -619,19 +619,16 @@ async def _handle_device_registry_event(hass: hass_core.HomeAssistant):
         action = event.data['action']
         registry = dr.async_get(hass)
         device_id = event.data.get('device_id')
-        if device_id not in registry.devices:
-            return
-        device = registry.async_get(device_id)
+        device, config_entry = dr.async_get_device_and_config_entry_for_domain(
+            hass, device_id, domain=DOMAIN, include_child_devices=False,
+        )
         if not device or not device.identifiers:
             return
         identifier = next(iter(device.identifiers))
         if identifier[0] != DOMAIN:
             return
         miot_device = None
-        for entry_id in device.config_entries:
-            entry = HassEntry.from_entry_id(hass, entry_id)
-            if not entry:
-                continue
+        if config_entry and (entry := HassEntry.from_entry_id(hass, config_entry.entry_id)):
             for d in entry.devices.values():
                 if d.identifiers == device.identifiers:
                     miot_device = d
