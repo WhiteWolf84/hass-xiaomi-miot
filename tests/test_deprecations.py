@@ -1,14 +1,15 @@
 """Home Assistant APIs this integration used to rely on, and the way out of them.
 
-Two deprecations show up in the Home Assistant log at startup:
+These deprecations show up in the Home Assistant log at startup:
 
   * the `CONCENTRATION_*` constants, gone in HA 2027.8, whose replacements
     (`UnitOfDensity`, `UnitOfRatio`) do not exist yet on our declared floor of
     HA 2026.1.0 — so the unit literals live here instead;
   * `TrackerEntity.location_name` and `BaseTrackerEntity.battery_level`, which
-    stop being supported in HA 2027.7 and may not be overridden.
+    stop being supported in HA 2027.7 and may not be overridden;
+  * the config flow's `CONN_CLASS_*` constants, gone in HA 2027.5.
 
-Both warnings are emitted at import or subclass creation time, so the checks
+The warnings are emitted at import or subclass creation time, so the checks
 below are on the module and the class, not on a running entity.
 """
 import ast
@@ -86,3 +87,20 @@ def test_the_battery_lookup_survived_as_a_plain_helper():
         get_battery_level = MiotTrackerEntity.get_battery_level
 
     assert Standalone().get_battery_level() is None
+
+
+# --- connection class --------------------------------------------------------
+
+def test_the_config_flow_no_longer_uses_the_connection_class():
+    """`CONN_CLASS_*` is gone in HA 2027.5 and reading it already warns. Home
+    Assistant ignores `CONNECTION_CLASS` altogether, the manifest's `iot_class`
+    is what describes the integration."""
+    from custom_components.xiaomi_miot import config_flow
+
+    names = {
+        node.attr if isinstance(node, ast.Attribute) else node.id
+        for node in ast.walk(ast.parse(_source(config_flow)))
+        if isinstance(node, (ast.Attribute, ast.Name))
+    }
+    assert not [name for name in names if name.startswith('CONN_CLASS_')]
+    assert 'CONNECTION_CLASS' not in names
