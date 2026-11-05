@@ -26,6 +26,7 @@ from homeassistant.components.climate import (
 )
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.helpers.restore_state import RestoreEntity
+from homeassistant.util.unit_conversion import TemperatureConverter
 
 from . import (
     DOMAIN,
@@ -48,6 +49,11 @@ DATA_KEY = f'{ENTITY_DOMAIN}.{DOMAIN}'
 
 DEFAULT_MIN_TEMP = 16.0
 DEFAULT_MAX_TEMP = 31.0
+TEMPERATURE_UNITS = (
+    UnitOfTemperature.CELSIUS,
+    UnitOfTemperature.KELVIN,
+    UnitOfTemperature.FAHRENHEIT,
+)
 
 SERVICE_TO_METHOD = {}
 
@@ -136,12 +142,15 @@ class BaseClimateEntity(BaseEntity):
             if num is not None:
                 cls = sta.attributes.get(ATTR_DEVICE_CLASS)
                 unit = sta.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
-                if cls == SensorDeviceClass.TEMPERATURE.value or unit in [
-                    UnitOfTemperature.CELSIUS,
-                    UnitOfTemperature.KELVIN,
-                    UnitOfTemperature.FAHRENHEIT,
-                ]:
-                    ext[ATTR_CURRENT_TEMPERATURE] = self.hass.config.units.temperature(num, unit)
+                if cls == SensorDeviceClass.TEMPERATURE.value or unit in TEMPERATURE_UNITS:
+                    # The value is stored as a native temperature, which the base
+                    # class converts to the system unit itself: convert it to the
+                    # entity's unit here, not to the system unit, or it is
+                    # converted twice whenever the two differ.
+                    native = self.native_temperature_unit
+                    if unit in TEMPERATURE_UNITS and native in TEMPERATURE_UNITS:
+                        num = TemperatureConverter.convert(num, unit, native)
+                    ext[ATTR_CURRENT_TEMPERATURE] = num
                 elif cls == SensorDeviceClass.HUMIDITY.value:
                     ext[ATTR_CURRENT_HUMIDITY] = num
         if ext:

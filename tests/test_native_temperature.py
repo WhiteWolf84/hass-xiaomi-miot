@@ -151,3 +151,39 @@ def test_the_water_heater_bounds_come_from_the_native_range():
 
     heater._prop_target_temp = None
     assert (heater.min_temp, heater.max_temp) == (water_heater.DEFAULT_MIN_TEMP, water_heater.DEFAULT_MAX_TEMP)
+
+
+async def _bound_thermostat(hass, make_device, load_miot_spec, units, state, unit):
+    """A thermostat whose current temperature comes from `sensor.room`."""
+    from custom_components.xiaomi_miot.core.const import DATA_CUSTOMIZE
+
+    hass.config.units = units
+    entity = _thermostat(make_device, load_miot_spec)
+    entity.hass = hass
+    entity.entity_id = 'climate.test_thermostat'
+    hass.data[DATA_CUSTOMIZE][entity.entity_id] = {'bind_sensor': 'sensor.room'}
+    hass.states.async_set('sensor.room', state, {
+        'device_class': 'temperature',
+        'unit_of_measurement': unit,
+    })
+    entity.update_bind_sensor()
+    return entity
+
+
+async def test_a_bound_sensor_is_converted_once(hass, make_device, load_miot_spec):
+    """The bound reading is converted to the entity's unit and Home Assistant
+    converts that to the system unit. Converting it to the system unit here, as
+    before, made a 20 °C room read 154.4 °F on a °C device."""
+    entity = await _bound_thermostat(
+        hass, make_device, load_miot_spec, US_CUSTOMARY_SYSTEM, '20', UnitOfTemperature.CELSIUS,
+    )
+    assert entity.native_current_temperature == 20
+    assert entity.state_attributes['current_temperature'] == 68
+
+
+async def test_a_bound_sensor_in_another_unit_lands_in_the_native_unit(hass, make_device, load_miot_spec):
+    entity = await _bound_thermostat(
+        hass, make_device, load_miot_spec, METRIC_SYSTEM, '68', UnitOfTemperature.FAHRENHEIT,
+    )
+    assert entity.native_current_temperature == 20
+    assert entity.state_attributes['current_temperature'] == 20
