@@ -2,7 +2,7 @@ import logging
 from typing import TYPE_CHECKING, Optional, Callable
 from functools import cached_property
 
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry
 from homeassistant.helpers.entity import Entity, EntityCategory
@@ -21,12 +21,48 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
+# Home Assistant 2026.11 still removes and re-adds an entity of a custom
+# integration when its entity_id changes, if a class of ours defines one of these
+# and neither it nor a subclass of it defines `async_entity_id_changed`.
+# The compatibility path goes away in 2027.11.
+LIFECYCLE_HOOKS = (
+    'async_prepare_to_add_to_hass',
+    'async_added_to_hass',
+    'async_will_remove_from_hass',
+)
+
 
 class BasicEntity(Entity, CustomConfigHelper):
     hass: HomeAssistant = None
     device: 'Device' = None
     conv: 'BaseConv' = None
     customize_entity_id: Optional[str] = None
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Opt every class with its own lifecycle hook in to in-place entity_id
+        # changes. Being re-added is not harmless here: XEntity subscribes to its
+        # device in the constructor and unsubscribes on removal, so a re-added
+        # entity would stop updating until Home Assistant restarts.
+        if 'async_entity_id_changed' not in cls.__dict__ and any(
+            hook in cls.__dict__ for hook in LIFECYCLE_HOOKS
+        ):
+            cls.async_entity_id_changed = BasicEntity.async_entity_id_changed
+
+    @callback
+    def async_entity_id_changed(self, old_entity_id: str) -> None:
+        """Move the entity to its new id in the integration's entity index.
+
+        The index is what the integration's services resolve `entity_id` with;
+        nothing else an entity of ours subscribes to is keyed on its entity_id.
+        """
+        super().async_entity_id_changed(old_entity_id)
+        entities = (self.hass.data.get(DOMAIN) or {}).get('entities')
+        if entities is None:
+            return
+        if entities.get(old_entity_id) is self:
+            del entities[old_entity_id]
+        entities[self.entity_id] = self
 
     def custom_config(self, key=None, default=None):
         return get_customize_via_entity(self, key, default)
