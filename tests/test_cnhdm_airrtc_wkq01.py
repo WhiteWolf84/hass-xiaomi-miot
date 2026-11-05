@@ -195,7 +195,7 @@ def test_floor_heating_power_state_and_partial_updates(make_device, load_miot_sp
         floor._attr_is_on,
         floor.hvac_mode,
         floor.hvac_action,
-        floor.target_temperature,
+        floor.native_target_temperature,
     ) == (True, HVACMode.HEAT, HVACAction.HEATING, 28)
     floor.set_state({
         floor._conv_power.full_name: False,
@@ -205,7 +205,7 @@ def test_floor_heating_power_state_and_partial_updates(make_device, load_miot_sp
         floor._attr_is_on,
         floor.hvac_mode,
         floor.hvac_action,
-        floor.target_temperature,
+        floor.native_target_temperature,
     ) == (False, HVACMode.OFF, HVACAction.OFF, 21)
 
 

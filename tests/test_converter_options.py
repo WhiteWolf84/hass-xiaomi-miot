@@ -242,19 +242,19 @@ def test_fixed_mode_preserves_power_state_on_partial_payload(make_device, load_m
     entity.set_state({entity._conv_power.full_name: True})
     entity.set_state({entity._conv_target_temp.full_name: 31})
     assert_fixed_heat(entity, True)
-    assert entity.target_temperature == 31
+    assert entity.native_target_temperature == 31
 
     entity.set_state({entity._conv_power.full_name: False})
     entity.set_state({entity._conv_target_temp.full_name: 18})
     assert_fixed_heat(entity, False)
-    assert entity.target_temperature == 18
+    assert entity.native_target_temperature == 18
 
     entity.set_state({
         entity._conv_power.full_name: True,
         entity._conv_target_temp.full_name: 26,
     })
     assert_fixed_heat(entity, True)
-    assert entity.target_temperature == 26
+    assert entity.native_target_temperature == 26
 
 
 def test_real_mode_converter_ignores_fixed_hvac_option(make_device, load_miot_spec):
